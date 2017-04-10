@@ -1,12 +1,17 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { changeServiceDateState } from '../actions/datePickerActions'
 import DatePicker from 'material-ui/DatePicker';
 
-function disableWeekends(date) {
-  return date.getDay() === 0 || date.getDay() === 6;
-}
+@connect((store) => {
+  return {
+    serviceDate: store.serviceDateState.serviceDate
+  }
+})
 
-// function handleChange(event, date) {
-// 	console.log(date);
+// have a bug here leading decorators error??
+// disableWeekends = (date) => {
+//   return date.getDay() === 0 || date.getDay() === 6;
 // }
 
 /**
@@ -20,22 +25,30 @@ export default class ChooseDate extends React.Component {
     this.state = {
       controlledDate: null,
     };
+
+    this.serviceDateState = this.serviceDateState.bind(this);
+    // this.disableWeekends = this.disableWeekends.bind(this);
   }
 
-  handleChange = (event, date) => {
-    this.setState({
-      controlledDate: date,
-    });
+  serviceDateState = (event, date) => {
+    this.props.dispatch(changeServiceDateState(date));
+    this.setState({controlledDate: date});
     console.log(date);
   };
+  // handleChange = (event, date) => {
+  //   this.setState({
+  //     controlledDate: date,
+  //   });
+  //   console.log(date);
+  // };
 
   render() {
     return (
       <DatePicker
         hintText="Choose a date to check availability"
         value={this.state.controlledDate}
-        onChange={this.handleChange}
-        shouldDisableDate={disableWeekends}
+        onChange={this.serviceDateState}
+        // shouldDisableDate={disableWeekends}
       />
     );
   }
