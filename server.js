@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Database configuration for mongoose
 // db: madness
 mongoose.connect("mongodb://localhost/madness");
-// mongoose.connect("mongodb://jrs341:HHCwc3et0@ds145379.mlab.com:45379/calhouns");
+// mongoose.connect("mongodb://mlab conncetion here");
 // Hook mongoose connection to db
 var db = mongoose.connection;
 
