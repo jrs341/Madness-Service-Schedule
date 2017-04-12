@@ -1,8 +1,16 @@
 import React from 'react';
+import { connect } from "react-redux";
+import { changeServiceDateState } from '../actions/scheduledByActions'
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-export default class TimeDropDown extends React.Component {
+@connect((store) => {
+  return {
+    scheduledBy: store.scheduledByState.scheduledBy
+  }
+})
+
+export default class EmployeeDropDown extends React.Component {
 
   constructor(props) {
     super(props);

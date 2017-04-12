@@ -15,8 +15,9 @@ import EmployeeDropDown from '../Components/EmployeeDropDown'
 @connect((store) => {
 	return {
 		location: store.locationState.location,
-		serviceDate: store.serviceDateState.serviceDate
-		// serviceTime: store.serviceTimeState.serviceTime
+		serviceDate: store.serviceDateState.serviceDate,
+		serviceTime: store.serviceTimeState.serviceTime,
+		scheduledBy: store.scheduledByState.scheduledBy
 	};
 })
 
