@@ -23,6 +23,87 @@ import EmployeeDropDown from '../Components/EmployeeDropDown'
 
 export default class ServiceForm extends React.Component {
 
+	constructor(props) {
+		super(props);
+		this.state = {
+			given_name: '',
+			family_name: '',
+			phone_number: '',
+			email: '',
+			vehicle_make: '',
+			vehicle_model: '',
+			vehicle_year: '',
+			requested_service: '' 
+		};
+
+		this.updateFormInfo = this.updateFormInfo.bind(this);
+		this.addCustomerToDB = this.addCustomerToDB.bind(this);
+		this.checkCustomerDB = this.checkCustomerDB.bind(this);
+		this.addToServiceSchedule = this.addToServiceSchedule.bind(this);
+		this.submitFormInfo = this.submitFormInfo.bind(this);
+	}
+
+	updateFormInfo = (event, newInput) => {
+		this.setState({[event.target.id]: newInput});
+	}
+
+	addCustomerToDB = () => {
+		axios.post('/addCustomerToDB',
+		{
+		  given_name: this.state.given_name,
+          family_name: this.state.family_name,
+          phone_number: this.state.phone_number,
+          email: this.state.email,
+          vehicle_make: this.state.vehicle_make,
+          vehicle_model: this.state.vehicle_model,
+          vehicle_year: this.state.vehicle_year
+		}).then(function(response){
+          console.log('added customer to DB');
+        });
+	}
+
+	checkCustomerDB = () => {
+		axios({
+          type: 'GET',
+          url: '/checkCustomerDB/' + this.state.email
+        }).then((response)=> {
+        	console.log(response.data);
+        	if(response.data == '') {
+        		console.log('email not found adding to customer DB');
+        		this.addCustomerToDB();
+        	}
+        	else {
+        		console.log('found customer in DB');
+        	}
+          
+        });
+    }
+
+    addToServiceSchedule = () => {
+		axios.post('/submitInfoToServiceSchedule',
+        {
+          location: this.props.location,
+          date: this.props.serviceDate,
+          time: this.props.serviceTime,
+          scheduled_by: this.props.scheduledBy,
+          given_name: this.state.given_name,
+          family_name: this.state.family_name,
+          phone_number: this.state.phone_number,
+          email: this.state.email,
+          vehicle_make: this.state.vehicle_make,
+          vehicle_model: this.state.vehicle_model,
+          vehicle_year: this.state.vehicle_year,
+          requested_service: this.state.requested_service
+        }).then(function(response){
+          console.log('added to service schedule');
+        });
+    }
+	
+    submitFormInfo = () => {
+    	this.checkCustomerDB();
+    	this.addToServiceSchedule();
+    }
+	
   render() {
     return (
     	<Row>
@@ -40,46 +121,70 @@ export default class ServiceForm extends React.Component {
 				            <TimeDropDown />
 
 				            <EmployeeDropDown />
-
-							<TextField
-								style={{display: 'block'}}
-				                id='First Name'
-				                type='text'
-				                hintText='First Name'
-				                floatingLabelText='First Name'
-				               
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='Last Name'
-				                type='text'
-				                hintText='Last Name'
-				                floatingLabelText='Last Name'
-				               
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='phoneNumber'
-				                type='text'
-				                hintText='Phone Number'
-				                floatingLabelText='Phone Number'
-				               
-				            />
+{/* Leave email as the first question and then map the rest of the fields and change function to onBlur to search and auto fill customer info*/}
 				            <TextField
 				            	style={{display: 'block'}}
 				                id='email'
 				                type='text'
 				                hintText='Email'
 				                floatingLabelText='Email'
-				               
+				               	onChange={this.updateFormInfo}
+				            />
+							<TextField
+								style={{display: 'block'}}
+				                id='given_name'
+				                type='text'
+				                hintText='First Name'
+				                floatingLabelText='First Name'
+				                onChange={this.updateFormInfo}
 				            />
 				            <TextField
 				            	style={{display: 'block'}}
-				                id='serviceRequest'
+				                id='family_name'
+				                type='text'
+				                hintText='Last Name'
+				                floatingLabelText='Last Name'
+				               	onChange={this.updateFormInfo}
+				            />
+				            <TextField
+				            	style={{display: 'block'}}
+				                id='phone_number'
+				                type='text'
+				                hintText='Phone Number'
+				                floatingLabelText='Phone Number'
+				               	onChange={this.updateFormInfo}
+				            />
+				            <TextField
+				            	style={{display: 'block'}}
+				                id='vehicle_make'
+				                type='text'
+				                hintText='Vehicle Make'
+				                floatingLabelText='Vehicle Make'
+				               	onChange={this.updateFormInfo}
+				            />
+				            <TextField
+				            	style={{display: 'block'}}
+				                id='vehicle_model'
+				                type='text'
+				                hintText='Vehicle Model'
+				                floatingLabelText='Vehicle Model'
+				               	onChange={this.updateFormInfo}
+				            />
+				            <TextField
+				            	style={{display: 'block'}}
+				                id='vehicle_year'
+				                type='text'
+				                hintText='Vehicle Year'
+				                floatingLabelText='Vehicle Year'
+				               	onChange={this.updateFormInfo}
+				            />
+				            <TextField
+				            	style={{display: 'block'}}
+				                id='service_request'
 				                type='text'
 				                hintText='Requested Service'
 				                floatingLabelText='Requested Service'
-				               
+				               	onChange={this.updateFormInfo}
 				            />
 				            
 						</CardText>
@@ -93,6 +198,7 @@ export default class ServiceForm extends React.Component {
 				            <RaisedButton
 				                label="Submit"
 				                primary={true}
+				                onClick={this.submitFormInfo}
 				              /> 
 						</CardActions>
 					</Card>

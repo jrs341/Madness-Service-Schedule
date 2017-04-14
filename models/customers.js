@@ -48,12 +48,22 @@ var CustomersSchema = new Schema({
     trim: true
   },
   postal_code: {
+    type: Number,
+    trim: true
+  },
+
+  vehicle_make: {
     type: String,
     trim: true
   },
 
-  vehicle_1_type: {
+  vehicle_model: {
     type: String,
+    trim: true
+  },
+
+  vehicle_year: {
+    type: Number,
     trim: true
   }
 });

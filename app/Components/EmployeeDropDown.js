@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { changeServiceDateState } from '../actions/scheduledByActions'
+import { changeScheduledByState } from '../actions/employeeDropDownActions'
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
@@ -15,16 +15,24 @@ export default class EmployeeDropDown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {value: 1};
+
+    this.scheduledByState = this.scheduledByState.bind(this);
   }
 
-  handleChange = (event, index, value) => {
+  scheduledByState = (event, index, value) => {
+    this.props.dispatch(changeScheduledByState(value));
     this.setState({value});
     console.log(value);
   }
 
+  // handleChange = (event, index, value) => {
+  //   this.setState({value});
+  //   console.log(value);
+  // }
+
   render() {
     return (
-      <DropDownMenu value={this.state.value} onChange={this.handleChange}>
+      <DropDownMenu value={this.state.value} onChange={this.scheduledByState}>
         <MenuItem value={1} label="Employee 1" primaryText="Employee 1" />
         <MenuItem value={2} label="Employee 2" primaryText="Employee 2" />
         <MenuItem value={3} label="Employee 3" primaryText="Employee 3" />

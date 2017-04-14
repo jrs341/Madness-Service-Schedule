@@ -32,7 +32,7 @@ export default class TimeDropDown extends React.Component {
   render() {
     return (
       <DropDownMenu value={this.state.value} onChange={this.serviceTimeState}>
-        <MenuItem value={1} label="9:00 am - 9:30 am" primaryText="9:00 am - 9:30 am" />
+        <MenuItem disabled = {true} value={1} label="9:00 am - 9:30 am" primaryText="9:00 am - 9:30 am" />
         <MenuItem value={2} label="9:30 am - 10:00 am" primaryText="9:30 am - 10:00 am" />
         <MenuItem value={3} label="10:00 am - 10:30 am" primaryText="10:00 am - 10:30 am" />
         <MenuItem value={4} label="10:30 am - 11:00 am" primaryText="10:30 am - 11:00 am" />

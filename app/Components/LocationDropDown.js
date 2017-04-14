@@ -14,7 +14,7 @@ export default class LocationDropDown extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {value: 1};
+    this.state = {value: 'Austin'};
 
     this.locationState = this.locationState.bind(this);
   }
@@ -28,9 +28,9 @@ export default class LocationDropDown extends React.Component {
 
   render() {
     return (
-      <DropDownMenu value={this.state.value} openImmediately = {1} onChange={this.locationState}>
-        <MenuItem value={1} label="Austin, TX" primaryText="Austin, TX" />
-        <MenuItem value={2} label="Signal Hill ,CA" primaryText="Signal Hill, CA" />
+      <DropDownMenu value={this.state.value} openImmediately = {true} onChange={this.locationState}>
+        <MenuItem value='Austin' label="Austin, TX" primaryText="Austin, TX" />
+        <MenuItem value='Signal Hill' label="Signal Hill ,CA" primaryText="Signal Hill, CA" />
       </DropDownMenu>
     );
   }

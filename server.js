@@ -45,8 +45,45 @@ db.once("open", function() {
 //   res.sendFile('public/index.html', { root: __dirname });
 // });
 
-app.get(`*`, function(req, res) {
+app.get(`/`, function(req, res) {
   res.sendFile('public/index.html', { root: __dirname });
+});
+
+app.post("/submitInfoToServiceSchedule", function(req, res) {
+ // check our req.body against our user model
+  var service = new ServiceSchedule(req.body);
+  service.save(function(error, doc) {
+    if (error) {
+      res.send(error);
+    }
+    else {
+      res.send(doc);
+    }
+  });
+});
+
+app.post("/addCustomerToDB", function(req, res){
+	var customer = new Customers(req.body);
+	customer.save(function(error, doc){
+		if(error) {
+			res.send(error);
+		}
+		else {
+			res.send(doc);
+		}
+	});
+});
+
+app.get("/checkCustomerDB/:email", function(req, res){
+    Customers.findOne({"email": req.params.email}, function(error, doc) {
+    if (error) {
+      res.send(error);
+    }
+    else {
+    	console.log(doc);
+      res.send(doc);
+    }
+  });
 });
 
 app.listen(PORT, function() {
