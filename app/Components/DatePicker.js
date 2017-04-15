@@ -9,8 +9,6 @@ import DatePicker from 'material-ui/DatePicker'
   }
 })
 
-
-
 /**
  * `DatePicker` can disable specific dates based on the return value of a callback.
  */
@@ -24,24 +22,25 @@ export default class ChooseDate extends React.Component {
     };
 
     this.serviceDateState = this.serviceDateState.bind(this);
+    this.formatDate = this.formatDate.bind(this);
     this.disableWeekends = this.disableWeekends.bind(this);
   }
 
   serviceDateState = (event, date) => {
-    this.props.dispatch(changeServiceDateState(date));
     this.setState({controlledDate: date});
+    var date = date.toString().split(' ', 4).join(' ');
+    this.props.dispatch(changeServiceDateState(date));
     console.log(date);
+  }
+
+  formatDate = (date) => {
+    var date = date.toString().split(' ', 4).join(' ');
+    return date;
   }
 
   disableWeekends = (date) => {
     return date.getDay() === 0 || date.getDay() === 6;
   }
-  // handleChange = (event, date) => {
-  //   this.setState({
-  //     controlledDate: date,
-  //   });
-  //   console.log(date);
-  // };
 
   render() {
     return (
@@ -49,6 +48,7 @@ export default class ChooseDate extends React.Component {
         hintText="Choose a date to check availability"
         value={this.state.controlledDate}
         onChange={this.serviceDateState}
+        formatDate={this.formatDate}
         shouldDisableDate={this.disableWeekends}
       />
     );

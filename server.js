@@ -58,6 +58,7 @@ app.post("/submitInfoToServiceSchedule", function(req, res) {
     }
     else {
       res.send(doc);
+      console.log(doc);
     }
   });
 });
@@ -78,6 +79,19 @@ app.get("/checkCustomerDB/:email", function(req, res){
     Customers.findOne({"email": req.params.email}, function(error, doc) {
     if (error) {
       res.send(error);
+    }
+    else {
+    	console.log(doc);
+      res.send(doc);
+    }
+  });
+});
+
+app.get("/scheduleForToday/:date", function(req, res){
+    ServiceSchedule.findOne({"date": req.params.date}, function(error, doc) {
+    if (error) {
+      res.send(error);
+      console.log(error);
     }
     else {
     	console.log(doc);

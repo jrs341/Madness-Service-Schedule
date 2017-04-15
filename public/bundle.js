@@ -38379,9 +38379,15 @@ var ChooseDate = (_dec = (0, _reactRedux.connect)(function (store) {
     var _this = _possibleConstructorReturn(this, (ChooseDate.__proto__ || Object.getPrototypeOf(ChooseDate)).call(this, props));
 
     _this.serviceDateState = function (event, date) {
-      _this.props.dispatch((0, _datePickerActions.changeServiceDateState)(date));
       _this.setState({ controlledDate: date });
+      var date = date.toString().split(' ', 4).join(' ');
+      _this.props.dispatch((0, _datePickerActions.changeServiceDateState)(date));
       console.log(date);
+    };
+
+    _this.formatDate = function (date) {
+      var date = date.toString().split(' ', 4).join(' ');
+      return date;
     };
 
     _this.disableWeekends = function (date) {
@@ -38393,25 +38399,19 @@ var ChooseDate = (_dec = (0, _reactRedux.connect)(function (store) {
     };
 
     _this.serviceDateState = _this.serviceDateState.bind(_this);
+    _this.formatDate = _this.formatDate.bind(_this);
     _this.disableWeekends = _this.disableWeekends.bind(_this);
     return _this;
   }
 
   _createClass(ChooseDate, [{
     key: 'render',
-
-    // handleChange = (event, date) => {
-    //   this.setState({
-    //     controlledDate: date,
-    //   });
-    //   console.log(date);
-    // };
-
     value: function render() {
       return _react2.default.createElement(_DatePicker2.default, {
         hintText: 'Choose a date to check availability',
         value: this.state.controlledDate,
         onChange: this.serviceDateState,
+        formatDate: this.formatDate,
         shouldDisableDate: this.disableWeekends
       });
     }
@@ -39150,7 +39150,7 @@ exports.default = ServiceForm;
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
 exports.default = undefined;
 
@@ -39168,6 +39168,10 @@ var _reactRouter = __webpack_require__(148);
 
 var _reactGridSystem = __webpack_require__(141);
 
+var _axios = __webpack_require__(244);
+
+var _axios2 = _interopRequireDefault(_axios);
+
 var _RaisedButton = __webpack_require__(192);
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
@@ -39181,6 +39185,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var date = new Date();
+var dateString = date.toString().split(' ', 4).join(' ');
 var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 var today = days[date.getDay()];
 var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -39188,63 +39193,106 @@ var month = months[date.getMonth()];
 var day = date.getDate();
 
 var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
-	return {
-		location: store.locationState.location,
-		serviceDate: store.serviceDateState.serviceDate,
-		serviceTime: store.serviceTimeState.serviceTime,
-		scheduledBy: store.scheduledByState.scheduledBy
-	};
+  return {
+    location: store.locationState.location,
+    serviceDate: store.serviceDateState.serviceDate,
+    serviceTime: store.serviceTimeState.serviceTime,
+    scheduledBy: store.scheduledByState.scheduledBy
+  };
 }), _dec(_class = function (_React$Component) {
-	_inherits(ServiceSchedule, _React$Component);
+  _inherits(ServiceSchedule, _React$Component);
 
-	function ServiceSchedule(props) {
-		_classCallCheck(this, ServiceSchedule);
+  function ServiceSchedule(props) {
+    _classCallCheck(this, ServiceSchedule);
 
-		var _this = _possibleConstructorReturn(this, (ServiceSchedule.__proto__ || Object.getPrototypeOf(ServiceSchedule)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (ServiceSchedule.__proto__ || Object.getPrototypeOf(ServiceSchedule)).call(this, props));
 
-		_this.state = {
-			given_name: '',
-			family_name: '',
-			phone_number: '',
-			email: '',
-			vehicle_make: '',
-			vehicle_model: '',
-			vehicle_year: '',
-			requested_service: ''
-		};
+    _this.scheduleForToday = function () {
+      (0, _axios2.default)({
+        type: 'GET',
+        url: '/scheduleForToday/' + dateString
+      }).then(function (response) {
+        console.log(response.data);
+        if (response.data == '') {
+          console.log('nothing scheduled for today');
+        } else {
+          console.log('today s schedule');
+          _this.setState({
+            given_name: response.data.given_name,
+            family_name: response.data.family_name,
+            email: response.data.email,
+            phone_number: response.data.phone_number,
+            vehicle_year: response.data.vehicle_year,
+            vehicle_make: response.data.vehicle_make,
+            vehicle_model: response.data.vehicle_model,
+            scheduled_by: response.data.scheduled_by
+          });
+        }
+      });
+    };
 
-		return _this;
-	}
+    _this.state = {
+      given_name: '',
+      family_name: '',
+      phone_number: '',
+      email: '',
+      vehicle_make: '',
+      vehicle_model: '',
+      vehicle_year: '',
+      requested_service: '',
+      scheduled_by: ''
+    };
 
-	_createClass(ServiceSchedule, [{
-		key: 'componentWillMount',
-		value: function componentWillMount() {
-			// get request here for current date
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'div',
-				null,
-				_react2.default.createElement(
-					'h1',
-					null,
-					' Madness AutoWorks Service Schedule for ',
-					this.props.location,
-					' ',
-					today,
-					' ',
-					month,
-					' ',
-					day,
-					' '
-				)
-			);
-		}
-	}]);
+    _this.scheduleForToday = _this.scheduleForToday.bind(_this);
 
-	return ServiceSchedule;
+    return _this;
+  }
+
+  _createClass(ServiceSchedule, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      // get request here for current date
+      console.log(dateString);
+      this.scheduleForToday();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'h1',
+          null,
+          ' Madness AutoWorks Service Schedule for ',
+          this.props.location,
+          ' ',
+          today,
+          ' ',
+          month,
+          ' ',
+          day,
+          ' '
+        ),
+        _react2.default.createElement(
+          'h1',
+          null,
+          ' ',
+          this.state.given_name,
+          ' '
+        ),
+        _react2.default.createElement(
+          'h1',
+          null,
+          ' ',
+          this.state.family_name,
+          ' '
+        )
+      );
+    }
+  }]);
+
+  return ServiceSchedule;
 }(_react2.default.Component)) || _class);
 exports.default = ServiceSchedule;
 
