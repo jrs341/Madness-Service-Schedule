@@ -54,6 +54,7 @@ app.post("/submitInfoToServiceSchedule", function(req, res) {
   var service = new ServiceSchedule(req.body);
   service.save(function(error, doc) {
     if (error) {
+      console.log(error);
       res.send(error);
     }
     else {
@@ -67,9 +68,11 @@ app.post("/addCustomerToDB", function(req, res){
 	var customer = new Customers(req.body);
 	customer.save(function(error, doc){
 		if(error) {
+			console.log(error);
 			res.send(error);
 		}
 		else {
+			console.log(doc);
 			res.send(doc);
 		}
 	});
@@ -78,23 +81,24 @@ app.post("/addCustomerToDB", function(req, res){
 app.get("/checkCustomerDB/:email", function(req, res){
     Customers.findOne({"email": req.params.email}, function(error, doc) {
     if (error) {
+      console.log(error);
       res.send(error);
     }
     else {
-    	console.log(doc);
+      console.log(doc);
       res.send(doc);
     }
   });
 });
 
 app.get("/scheduleForToday/:date", function(req, res){
-    ServiceSchedule.findOne({"date": req.params.date}, function(error, doc) {
+    ServiceSchedule.find({"date": req.params.date}, function(error, doc) {
     if (error) {
       res.send(error);
       console.log(error);
     }
     else {
-    	console.log(doc);
+      console.log(doc);
       res.send(doc);
     }
   });

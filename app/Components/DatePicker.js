@@ -3,6 +3,8 @@ import { connect } from "react-redux"
 import { changeServiceDateState } from '../actions/datePickerActions'
 import DatePicker from 'material-ui/DatePicker'
 
+var date = new Date();
+
 @connect((store) => {
   return {
     serviceDate: store.serviceDateState.serviceDate
@@ -18,7 +20,7 @@ export default class ChooseDate extends React.Component {
     super(props);
 
     this.state = {
-      controlledDate: null,
+      controlledDate: date,
     };
 
     this.serviceDateState = this.serviceDateState.bind(this);
@@ -39,7 +41,7 @@ export default class ChooseDate extends React.Component {
   }
 
   disableWeekends = (date) => {
-    return date.getDay() === 0 || date.getDay() === 6;
+    // return date.getDay() === 0 || date.getDay() === 6;
   }
 
   render() {
@@ -50,6 +52,7 @@ export default class ChooseDate extends React.Component {
         onChange={this.serviceDateState}
         formatDate={this.formatDate}
         shouldDisableDate={this.disableWeekends}
+        minDate={date}
       />
     );
   }

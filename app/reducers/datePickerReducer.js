@@ -1,5 +1,5 @@
 export default function reducer(state={
-  serviceDate: 1
+  serviceDate: new Date().toString().split(' ', 4).join(' ')
 }, action) {
   switch (action.type) {
     case 'SERVICE_DATE':
@@ -7,7 +7,8 @@ export default function reducer(state={
               return {...state, serviceDate: action.payload  
               } 
             } else {
-              return {...state, serviceDate: 1}
+              var date = new Date();
+              return {...state, serviceDate: new Date().toString().split(' ', 4).join(' ') }
             }
     default:
         return state;  

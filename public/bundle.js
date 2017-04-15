@@ -38363,6 +38363,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var date = new Date();
+
 /**
  * `DatePicker` can disable specific dates based on the return value of a callback.
  */
@@ -38391,11 +38393,11 @@ var ChooseDate = (_dec = (0, _reactRedux.connect)(function (store) {
     };
 
     _this.disableWeekends = function (date) {
-      return date.getDay() === 0 || date.getDay() === 6;
+      // return date.getDay() === 0 || date.getDay() === 6;
     };
 
     _this.state = {
-      controlledDate: null
+      controlledDate: date
     };
 
     _this.serviceDateState = _this.serviceDateState.bind(_this);
@@ -38412,7 +38414,8 @@ var ChooseDate = (_dec = (0, _reactRedux.connect)(function (store) {
         value: this.state.controlledDate,
         onChange: this.serviceDateState,
         formatDate: this.formatDate,
-        shouldDisableDate: this.disableWeekends
+        shouldDisableDate: this.disableWeekends,
+        minDate: date
       });
     }
   }]);
@@ -38564,10 +38567,8 @@ var LocationDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
     var _this = _possibleConstructorReturn(this, (LocationDropDown.__proto__ || Object.getPrototypeOf(LocationDropDown)).call(this, props));
 
     _this.locationState = function (event, index, value) {
-      // locationState(event, index, value) {
       _this.props.dispatch((0, _locationDropDownActions.changeLocationState)(value));
       _this.setState({ value: value });
-      // console.log(value + 'locationState');
     };
 
     _this.state = { value: 'Austin' };
@@ -38581,7 +38582,7 @@ var LocationDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
     value: function render() {
       return _react2.default.createElement(
         _DropDownMenu2.default,
-        { value: this.state.value, openImmediately: true, onChange: this.locationState },
+        { value: this.state.value, openImmediately: false, onChange: this.locationState },
         _react2.default.createElement(_MenuItem2.default, { value: 'Austin', label: 'Austin, TX', primaryText: 'Austin, TX' }),
         _react2.default.createElement(_MenuItem2.default, { value: 'Signal Hill', label: 'Signal Hill ,CA', primaryText: 'Signal Hill, CA' })
       );
@@ -39172,6 +39173,14 @@ var _axios = __webpack_require__(244);
 
 var _axios2 = _interopRequireDefault(_axios);
 
+var _LocationDropDown = __webpack_require__(264);
+
+var _LocationDropDown2 = _interopRequireDefault(_LocationDropDown);
+
+var _DatePicker = __webpack_require__(262);
+
+var _DatePicker2 = _interopRequireDefault(_DatePicker);
+
 var _RaisedButton = __webpack_require__(192);
 
 var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
@@ -39186,11 +39195,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var date = new Date();
 var dateString = date.toString().split(' ', 4).join(' ');
-var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-var today = days[date.getDay()];
-var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-var month = months[date.getMonth()];
-var day = date.getDate();
+// var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+// var today = days[date.getDay()];
+// var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+// var month = months[date.getMonth()];
+// var day = date.getDate();
+// var year = date.getYear();
 
 var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
@@ -39212,21 +39222,35 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
         type: 'GET',
         url: '/scheduleForToday/' + dateString
       }).then(function (response) {
-        console.log(response.data);
+        // console.log(response.data);
         if (response.data == '') {
           console.log('nothing scheduled for today');
         } else {
           console.log('today s schedule');
-          _this.setState({
-            given_name: response.data.given_name,
-            family_name: response.data.family_name,
-            email: response.data.email,
-            phone_number: response.data.phone_number,
-            vehicle_year: response.data.vehicle_year,
-            vehicle_make: response.data.vehicle_make,
-            vehicle_model: response.data.vehicle_model,
-            scheduled_by: response.data.scheduled_by
-          });
+          for (var i = 0; i < response.data.length; i++) {
+            _this.state = response.data[i];
+            console.log(response.data[i]);
+          }
+          // this.state = response.data;
+          // for (var prop in response.data) {
+          // 	// console.log(prop + ' = ' + response.data[prop]);
+          // 	for (var stateProp in this.state) {
+          // 		if (prop == stateProp) {
+          // 			console.log(prop + ' ' + stateProp);
+          // 			this.setState({stateProp: response.data[prop]});
+          // 		}
+          // 	}
+          // };
+          // this.setState({
+          // 	given_name: response.data.given_name,
+          // 	family_name: response.data.family_name,
+          // 	email: response.data.email,
+          // 	phone_number: response.data.phone_number,
+          // 	vehicle_year: response.data.vehicle_year,
+          // 	vehicle_make: response.data.vehicle_make,
+          // 	vehicle_model: response.data.vehicle_model,
+          // 	scheduled_by: response.data.scheduled_by
+          // })
         }
       });
     };
@@ -39265,28 +39289,10 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
           'h1',
           null,
           ' Madness AutoWorks Service Schedule for ',
-          this.props.location,
+          _react2.default.createElement(_LocationDropDown2.default, null),
           ' ',
-          today,
-          ' ',
-          month,
-          ' ',
-          day,
-          ' '
-        ),
-        _react2.default.createElement(
-          'h1',
-          null,
-          ' ',
-          this.state.given_name,
-          ' '
-        ),
-        _react2.default.createElement(
-          'h1',
-          null,
-          ' ',
-          this.state.family_name,
-          ' '
+          _react2.default.createElement(_DatePicker2.default, null),
+          '  '
         )
       );
     }
@@ -39312,7 +39318,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 exports.default = reducer;
 function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-    serviceDate: 1
+    serviceDate: new Date().toString().split(' ', 4).join(' ')
   };
   var action = arguments[1];
 
@@ -39322,7 +39328,8 @@ function reducer() {
         return _extends({}, state, { serviceDate: action.payload
         });
       } else {
-        return _extends({}, state, { serviceDate: 1 });
+        var date = new Date();
+        return _extends({}, state, { serviceDate: new Date().toString().split(' ', 4).join(' ') });
       }
     default:
       return state;
@@ -39460,7 +39467,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 exports.default = reducer;
 function reducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-    location: 1
+    location: 'Austin'
   };
   var action = arguments[1];
 
@@ -39470,7 +39477,7 @@ function reducer() {
         return _extends({}, state, { location: action.payload
         });
       } else {
-        return _extends({}, state, { location: 1 });
+        return _extends({}, state, { location: 'Austin' });
       }
     default:
       return state;
