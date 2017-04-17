@@ -38393,7 +38393,7 @@ var ChooseDate = (_dec = (0, _reactRedux.connect)(function (store) {
     };
 
     _this.disableWeekends = function (date) {
-      // return date.getDay() === 0 || date.getDay() === 6;
+      return date.getDay() === 0 || date.getDay() === 6;
     };
 
     _this.state = {
@@ -38615,6 +38615,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = __webpack_require__(47);
 
+var _axios = __webpack_require__(244);
+
+var _axios2 = _interopRequireDefault(_axios);
+
 var _serviceTimeActions = __webpack_require__(268);
 
 var _DropDownMenu = __webpack_require__(119);
@@ -38635,6 +38639,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
+    location: store.locationState.location,
+    serviceDate: store.serviceDateState.serviceDate,
     serviceTime: store.serviceTimeState.serviceTime
   };
 }), _dec(_class = function (_React$Component) {
@@ -38651,41 +38657,73 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
       console.log(value);
     };
 
-    _this.state = { value: 1 };
+    _this.getAvailableTimes = function (date, location) {
 
+      (0, _axios2.default)({
+        type: 'GET',
+        url: '/availableTimes/' + date + '/' + location
+      }).then(function (response) {
+        console.log(response.data);
+        if (response.data == '') {
+          console.log('nothing scheduled for today');
+          _this.setState({ reservedTimes: [] });
+        } else {
+          console.log('today s schedule');
+          _this.setState({ reservedTimes: response.data });
+        }
+      });
+    };
+
+    _this.state = {
+      value: 1,
+      reservedTimes: [],
+      timeArray: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }]
+    };
+
+    _this.getAvailableTimes = _this.getAvailableTimes.bind(_this);
     _this.serviceTimeState = _this.serviceTimeState.bind(_this);
     return _this;
   }
 
   _createClass(TimeDropDown, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.getAvailableTimes(this.props.serviceDate, this.props.location);
+    }
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {
+      console.log('will update');
+      if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location) {
+        this.getAvailableTimes(nextProps.serviceDate, nextProps.location);
+      } else {}
+    }
+  }, {
+    key: 'menuItem',
+    value: function menuItem(fieldInfo, index) {
+      if (this.state.reservedTimes.length == 0) {
+        return _react2.default.createElement(_MenuItem2.default, { key: index, value: this.state.timeArray[index].time, label: this.state.timeArray[index].time, primaryText: this.state.timeArray[index].time });
+      } else {
+        for (var j = 0; j < this.state.reservedTimes.length; j++) {
+          if (this.state.timeArray[index].time == this.state.reservedTimes[j].time) {
+            return _react2.default.createElement(_MenuItem2.default, { disabled: true, key: index, value: this.state.timeArray[index].time, label: this.state.timeArray[index].time, primaryText: this.state.timeArray[index].time });
+          } else {
+            return _react2.default.createElement(_MenuItem2.default, { key: index, value: this.state.timeArray[index].time, label: this.state.timeArray[index].time, primaryText: this.state.timeArray[index].time });
+          }
+        }
+      }
+    }
+  }, {
     key: 'render',
-
-
-    // handleChange = (event, index, value) => {
-    //   this.setState({value});
-    //   console.log(value);
-    // }
-
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         _DropDownMenu2.default,
         { value: this.state.value, onChange: this.serviceTimeState },
-        _react2.default.createElement(_MenuItem2.default, { disabled: true, value: 1, label: '9:00 am - 9:30 am', primaryText: '9:00 am - 9:30 am' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 2, label: '9:30 am - 10:00 am', primaryText: '9:30 am - 10:00 am' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 3, label: '10:00 am - 10:30 am', primaryText: '10:00 am - 10:30 am' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 4, label: '10:30 am - 11:00 am', primaryText: '10:30 am - 11:00 am' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 5, label: '11:00 am - 11:30 am', primaryText: '11:00 am - 11:30 am' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 6, label: '11:30 am - 12:00 pm', primaryText: '11:30 am - 12:00 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 7, label: '12:00 pm - 12:30 pm', primaryText: '12:00 pm - 12:30 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 8, label: '12:30 pm - 1:00 pm', primaryText: '12:30 pm - 1:00 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 9, label: '1:00 pm - 1:30 pm', primaryText: '1:00 pm - 1:30 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 10, label: '1:30 pm - 2:00 pm', primaryText: '1:30 pm - 2:00 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 11, label: '2:00 pm - 2:30 pm', primaryText: '2:00 pm - 2:30 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 12, label: '2:30 pm - 3:00 pm', primaryText: '2:30 pm - 3:00 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 13, label: '3:00 pm - 3:30 pm', primaryText: '3:00 pm - 3:30 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 14, label: '3:30 pm - 4:00 pm', primaryText: '3:30 pm - 4:00 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 15, label: '4:00 pm - 4:30 pm', primaryText: '4:00 pm - 4:30 pm' }),
-        _react2.default.createElement(_MenuItem2.default, { value: 16, label: '4:30 pm - 5:00 pm', primaryText: '4:30 pm - 5:00 pm' })
+        this.state.timeArray.map(function (fieldInfo, index) {
+          return _this2.menuItem(fieldInfo, index);
+        })
       );
     }
   }]);
@@ -38966,7 +39004,8 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 				email: _this.state.email,
 				vehicle_make: _this.state.vehicle_make,
 				vehicle_model: _this.state.vehicle_model,
-				vehicle_year: _this.state.vehicle_year
+				vehicle_year: _this.state.vehicle_year,
+				requested_service: _this.state.requested_service
 			}).then(function (response) {
 				console.log('added customer to DB');
 			});
@@ -39119,6 +39158,11 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 						_react2.default.createElement(
 							_Card.CardActions,
 							null,
+							_react2.default.createElement(_RaisedButton2.default, {
+								label: 'Submit',
+								primary: true,
+								onClick: this.submitFormInfo
+							}),
 							_react2.default.createElement(
 								_reactRouter.Link,
 								{ to: 'serviceSchedule' },
@@ -39126,12 +39170,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 									label: 'Service Schedule',
 									primary: true
 								})
-							),
-							_react2.default.createElement(_RaisedButton2.default, {
-								label: 'Submit',
-								primary: true,
-								onClick: this.submitFormInfo
-							})
+							)
 						)
 					)
 				)
@@ -39240,12 +39279,14 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 		_this.scheduleForToday = function () {
 			(0, _axios2.default)({
 				type: 'GET',
-				url: '/scheduleForToday/' + dateString
+				url: '/scheduleForToday/' + dateString + '/' + _this.props.location
 			}).then(function (response) {
-				// console.log(response.data);
 				if (response.data == '') {
 					console.log('nothing scheduled for today');
+					_this.setState({ scheduleStatus: 'There are no reservations for today at this location' });
 				} else {
+					_this.setState({ cardDisplay: 'block' });
+					_this.setState({ scheduleStatus: '' });
 					console.log('today s schedule');
 					_this.updateScheduleInfo(response.data);
 				}
@@ -39257,18 +39298,14 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 			(0, _axios2.default)({
 				type: 'GET',
 				url: '/getSchedule/' + date + '/' + location
-			})
-			// axios.get('/getSchedule/',{
-			// 	params: {
-			// 		date: date,
-			// 		location: this.props.location
-			// 	}
-			// })
-			.then(function (response) {
+			}).then(function (response) {
 				// console.log(response.data);
 				if (response.data == '') {
 					console.log('nothing scheduled for today');
+					_this.setState({ scheduleStatus: 'There are no reservations for today at this location' });
 				} else {
+					_this.setState({ cardDisplay: 'block' });
+					_this.setState({ scheduleStatus: '' });
 					console.log('today s schedule');
 					_this.updateScheduleInfo(response.data);
 				}
@@ -39276,7 +39313,9 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 		};
 
 		_this.state = {
-			scheduleInfo: []
+			scheduleInfo: [],
+			cardDisplay: 'none',
+			scheduleStatus: ''
 			// given_name: '',
 			// family_name: '',
 			// phone_number: '',
@@ -39298,7 +39337,6 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 	_createClass(ServiceSchedule, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {
-			console.log('will mount' + this.props.serviceDate);
 			this.scheduleForToday();
 		}
 		// without the if else statement an infinate loop is created
@@ -39306,19 +39344,18 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 	}, {
 		key: 'componentWillUpdate',
 		value: function componentWillUpdate(nextProps, nextState) {
-			console.log('will update');
-			if (this.props.serviceDate != nextProps.serviceDate) {
+			// console.log('will update');
+			if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location) {
+				this.setState({ cardDisplay: 'none' });
 				this.getSchedule(nextProps.serviceDate, nextProps.location);
-			} else {
-				console.log(this.props.serviceDate);
-			}
+			} else {}
 		}
 	}, {
 		key: 'card',
 		value: function card(fieldInfo, index) {
 			return _react2.default.createElement(
 				_Card.Card,
-				null,
+				{ style: { display: this.state.cardDisplay } },
 				_react2.default.createElement(_Card.CardHeader, {
 					title: fieldInfo.time,
 					avatar: _react2.default.createElement(_build2.default, null),
@@ -39371,6 +39408,7 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 					_react2.default.createElement(_DatePicker2.default, null),
 					_react2.default.createElement(_LocationDropDown2.default, null)
 				),
+				this.state.scheduleStatus,
 				this.state.scheduleInfo.map(function (fieldInfo, index) {
 					return _this2.card(fieldInfo, index);
 				})

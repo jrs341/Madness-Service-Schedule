@@ -32,7 +32,9 @@ export default class ServiceSchedule extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
-		scheduleInfo: []
+		scheduleInfo: [],
+		cardDisplay: 'none',
+		scheduleStatus: ''
 		// given_name: '',
 		// family_name: '',
 		// phone_number: '',
@@ -51,23 +53,23 @@ constructor(props) {
 }
 
 componentWillMount() {
-	console.log('will mount' + this.props.serviceDate);
 	this.scheduleForToday();
 }
 // without the if else statement an infinate loop is created
 componentWillUpdate(nextProps, nextState){
-	console.log('will update');
-	if (this.props.serviceDate != nextProps.serviceDate){
+	// console.log('will update');
+	if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location){
+		this.setState({cardDisplay: 'none'});
 		this.getSchedule(nextProps.serviceDate, nextProps.location);
 	}
 	else {
-		console.log(this.props.serviceDate);
+		
 	}
 }
 
 card(fieldInfo, index) {
 	return (
-		 <Card>
+		 <Card style={{display: this.state.cardDisplay}}>
 		    <CardHeader
 		      title= {fieldInfo.time} 
 		      avatar={<ActionBuild />}
@@ -124,13 +126,15 @@ updateScheduleInfo(getRequestResponse) {
 scheduleForToday = () => {
 	axios({
       type: 'GET',
-      url: '/scheduleForToday/' + dateString
+      url: '/scheduleForToday/' + dateString + '/' + this.props.location
     }).then((response)=> {
-    	// console.log(response.data);
     	if(response.data == '') {
-    		console.log('nothing scheduled for today');	
+    		console.log('nothing scheduled for today');
+    		this.setState({scheduleStatus: 'There are no reservations for today at this location'});	
     	}
     	else {
+    		this.setState({cardDisplay: 'block'});
+    		this.setState({scheduleStatus: ''});
     		console.log('today s schedule');
     		this.updateScheduleInfo(response.data);
     	}
@@ -142,21 +146,17 @@ getSchedule = (date, location) => {
 	axios({
       type: 'GET',
       url: '/getSchedule/' + date + '/' + location
-    })
-	// axios.get('/getSchedule/',{
-	// 	params: {
-	// 		date: date,
-	// 		location: this.props.location
-	// 	}
-	// })
-	.then((response)=> {
+    }).then((response)=> {
     	// console.log(response.data);
     	if(response.data == '') {
-    		console.log('nothing scheduled for today');	
+    		console.log('nothing scheduled for today');
+    		this.setState({scheduleStatus: 'There are no reservations for today at this location'});	
     	}
     	else {
+    		this.setState({cardDisplay: 'block'});
+    		this.setState({scheduleStatus: ''});
     		console.log('today s schedule');
-    		this.updateScheduleInfo(response.data);
+    		this.updateScheduleInfo(response.data);	
     	}
     });
 }
@@ -168,6 +168,7 @@ getSchedule = (date, location) => {
     			<DatePicker />  
     			<LocationDropDown /> 
     		</h1>
+    		{this.state.scheduleStatus}
     		{this.state.scheduleInfo.map((fieldInfo, index) => this.card(fieldInfo, index))}
     	</div>
     );

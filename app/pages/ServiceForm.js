@@ -56,7 +56,8 @@ export default class ServiceForm extends React.Component {
           email: this.state.email,
           vehicle_make: this.state.vehicle_make,
           vehicle_model: this.state.vehicle_model,
-          vehicle_year: this.state.vehicle_year
+          vehicle_year: this.state.vehicle_year,
+          requested_service: this.state.requested_service
 		}).then(function(response){
           console.log('added customer to DB');
         });
@@ -107,103 +108,103 @@ export default class ServiceForm extends React.Component {
   render() {
     return (
     	<Row>
-				<Col md={8} offset={{ md: 2 }}>
-					<Card style={{transform: 'translateY(26%)'}}>
-						<CardTitle
-							title='Schedule Service Form'>
-						</CardTitle>
-						<CardText>
+			<Col md={8} offset={{ md: 2 }}>
+				<Card style={{transform: 'translateY(26%)'}}>
+					<CardTitle
+						title='Schedule Service Form'>
+					</CardTitle>
+					<CardText>
 
-							<LocationDropDown />
+						<LocationDropDown />
 
-				            <DatePicker />
+			            <DatePicker />
 
-				            <TimeDropDown />
+			            <TimeDropDown />
 
-				            <EmployeeDropDown />
+			            <EmployeeDropDown />
 {/* Leave email as the first question and then map the rest of the fields and change function to onBlur to search and auto fill customer info*/}
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='email'
-				                type='text'
-				                hintText='Email'
-				                floatingLabelText='Email'
-				               	onChange={this.updateFormInfo}
-				            />
-							<TextField
-								style={{display: 'block'}}
-				                id='given_name'
-				                type='text'
-				                hintText='First Name'
-				                floatingLabelText='First Name'
-				                onChange={this.updateFormInfo}
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='family_name'
-				                type='text'
-				                hintText='Last Name'
-				                floatingLabelText='Last Name'
-				               	onChange={this.updateFormInfo}
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='phone_number'
-				                type='text'
-				                hintText='Phone Number'
-				                floatingLabelText='Phone Number'
-				               	onChange={this.updateFormInfo}
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='vehicle_make'
-				                type='text'
-				                hintText='Vehicle Make'
-				                floatingLabelText='Vehicle Make'
-				               	onChange={this.updateFormInfo}
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='vehicle_model'
-				                type='text'
-				                hintText='Vehicle Model'
-				                floatingLabelText='Vehicle Model'
-				               	onChange={this.updateFormInfo}
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='vehicle_year'
-				                type='text'
-				                hintText='Vehicle Year'
-				                floatingLabelText='Vehicle Year'
-				               	onChange={this.updateFormInfo}
-				            />
-				            <TextField
-				            	style={{display: 'block'}}
-				                id='service_request'
-				                type='text'
-				                hintText='Requested Service'
-				                floatingLabelText='Requested Service'
-				               	onChange={this.updateFormInfo}
-				            />
+			            <TextField
+			            	style={{display: 'block'}}
+			                id='email'
+			                type='text'
+			                hintText='Email'
+			                floatingLabelText='Email'
+			               	onChange={this.updateFormInfo}
+			            />
+						<TextField
+							style={{display: 'block'}}
+			                id='given_name'
+			                type='text'
+			                hintText='First Name'
+			                floatingLabelText='First Name'
+			                onChange={this.updateFormInfo}
+			            />
+			            <TextField
+			            	style={{display: 'block'}}
+			                id='family_name'
+			                type='text'
+			                hintText='Last Name'
+			                floatingLabelText='Last Name'
+			               	onChange={this.updateFormInfo}
+			            />
+			            <TextField
+			            	style={{display: 'block'}}
+			                id='phone_number'
+			                type='text'
+			                hintText='Phone Number'
+			                floatingLabelText='Phone Number'
+			               	onChange={this.updateFormInfo}
+			            />
+			            <TextField
+			            	style={{display: 'block'}}
+			                id='vehicle_make'
+			                type='text'
+			                hintText='Vehicle Make'
+			                floatingLabelText='Vehicle Make'
+			               	onChange={this.updateFormInfo}
+			            />
+			            <TextField
+			            	style={{display: 'block'}}
+			                id='vehicle_model'
+			                type='text'
+			                hintText='Vehicle Model'
+			                floatingLabelText='Vehicle Model'
+			               	onChange={this.updateFormInfo}
+			            />
+			            <TextField
+			            	style={{display: 'block'}}
+			                id='vehicle_year'
+			                type='text'
+			                hintText='Vehicle Year'
+			                floatingLabelText='Vehicle Year'
+			               	onChange={this.updateFormInfo}
+			            />
+			            <TextField
+			            	style={{display: 'block'}}
+			                id='service_request'
+			                type='text'
+			                hintText='Requested Service'
+			                floatingLabelText='Requested Service'
+			               	onChange={this.updateFormInfo}
+			            />
 				            
-						</CardText>
-						<CardActions>
-							<Link to='serviceSchedule'>
-				              <RaisedButton
-				                label="Service Schedule"
-				                primary={true}
-				              /> 
-				            </Link>
-				            <RaisedButton
-				                label="Submit"
-				                primary={true}
-				                onClick={this.submitFormInfo}
-				              /> 
-						</CardActions>
-					</Card>
-				</Col>
-			</Row>
+					</CardText>
+					<CardActions>
+						<RaisedButton
+			                label="Submit"
+			                primary={true}
+			                onClick={this.submitFormInfo}
+			            /> 
+						<Link to='serviceSchedule'>
+			              <RaisedButton
+			                label="Service Schedule"
+			                primary={true}
+			              /> 
+			            </Link> 
+					</CardActions>
+				</Card>
+			</Col>
+		</Row>
     );
   }
 }

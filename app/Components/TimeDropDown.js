@@ -1,21 +1,44 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
+import axios from 'axios'
 import { changeServiceTimeState } from '../actions/serviceTimeActions'
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
+import DropDownMenu from 'material-ui/DropDownMenu'
+import MenuItem from 'material-ui/MenuItem'
 
 @connect((store) => {
   return {
+    location: store.locationState.location,
+    serviceDate: store.serviceDateState.serviceDate,
     serviceTime: store.serviceTimeState.serviceTime
   }
 })
+
 export default class TimeDropDown extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {value: 1};
+    this.state = {
+      value: 1,
+      reservedTimes: [],
+      timeArray: [{time:'9:00'},{time:'9:30'}, {time:'10:00'}, {time:'10:30'}, {time:'11:00'}, {time:'11:30'}, {time:'12:00'}, {time:'12:30'}, {time:'1:00'}, {time:'1:30'}, {time:'2:00'}, {time:'2:30'}, {time:'3:00'}, {time:'3:30'}, {time:'4:00'}, {time:'4:30'}]
+    };
 
+    this.getAvailableTimes = this.getAvailableTimes.bind(this);
     this.serviceTimeState = this.serviceTimeState.bind(this);
+  }
+
+  componentWillMount() {
+    this.getAvailableTimes(this.props.serviceDate, this.props.location);
+  }
+
+  componentWillUpdate(nextProps, nextState){
+    console.log('will update');
+    if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location){
+      this.getAvailableTimes(nextProps.serviceDate, nextProps.location);
+    }
+    else {
+      
+    }
   }
 
   serviceTimeState = (event, index, value) => {
@@ -24,30 +47,52 @@ export default class TimeDropDown extends React.Component {
     console.log(value);
   }
 
-  // handleChange = (event, index, value) => {
-  //   this.setState({value});
-  //   console.log(value);
-  // }
+  getAvailableTimes = (date, location) => {
+
+    axios({
+        type: 'GET',
+        url: '/availableTimes/' + date + '/' + location
+      }).then((response)=> {
+        console.log(response.data);
+        if(response.data == '') {
+          console.log('nothing scheduled for today');
+          this.setState({reservedTimes: []});
+        }
+        else {
+          console.log('today s schedule');
+          this.setState({reservedTimes: response.data});
+        }
+    });
+  }
+
+  menuItem(fieldInfo, index) {
+    if (this.state.reservedTimes.length == 0) {
+      return (
+        <MenuItem key={index} value={this.state.timeArray[index].time} label={this.state.timeArray[index].time} primaryText={this.state.timeArray[index].time} />
+      );
+    }
+    else {
+      for (var j=0; j<this.state.reservedTimes.length; j++) {
+        if (this.state.timeArray[index].time == this.state.reservedTimes[j].time){
+          return (
+            <MenuItem disabled={true} key={index} value={this.state.timeArray[index].time} label={this.state.timeArray[index].time} primaryText={this.state.timeArray[index].time} />
+          );
+        }
+        else {
+          return (
+            <MenuItem key={index} value={this.state.timeArray[index].time} label={this.state.timeArray[index].time} primaryText={this.state.timeArray[index].time} />
+          ); 
+        }
+      } 
+    }
+  }
 
   render() {
     return (
       <DropDownMenu value={this.state.value} onChange={this.serviceTimeState}>
-        <MenuItem disabled = {true} value={1} label="9:00 am - 9:30 am" primaryText="9:00 am - 9:30 am" />
-        <MenuItem value={2} label="9:30 am - 10:00 am" primaryText="9:30 am - 10:00 am" />
-        <MenuItem value={3} label="10:00 am - 10:30 am" primaryText="10:00 am - 10:30 am" />
-        <MenuItem value={4} label="10:30 am - 11:00 am" primaryText="10:30 am - 11:00 am" />
-        <MenuItem value={5} label="11:00 am - 11:30 am" primaryText="11:00 am - 11:30 am" />
-        <MenuItem value={6} label="11:30 am - 12:00 pm" primaryText="11:30 am - 12:00 pm" />
-        <MenuItem value={7} label="12:00 pm - 12:30 pm" primaryText="12:00 pm - 12:30 pm" />
-        <MenuItem value={8} label="12:30 pm - 1:00 pm" primaryText="12:30 pm - 1:00 pm" />
-        <MenuItem value={9} label="1:00 pm - 1:30 pm" primaryText="1:00 pm - 1:30 pm" />
-        <MenuItem value={10} label="1:30 pm - 2:00 pm" primaryText="1:30 pm - 2:00 pm" />
-        <MenuItem value={11} label="2:00 pm - 2:30 pm" primaryText="2:00 pm - 2:30 pm" />
-        <MenuItem value={12} label="2:30 pm - 3:00 pm" primaryText="2:30 pm - 3:00 pm" />
-        <MenuItem value={13} label="3:00 pm - 3:30 pm" primaryText="3:00 pm - 3:30 pm" />
-        <MenuItem value={14} label="3:30 pm - 4:00 pm" primaryText="3:30 pm - 4:00 pm" />
-        <MenuItem value={15} label="4:00 pm - 4:30 pm" primaryText="4:00 pm - 4:30 pm" />
-        <MenuItem value={16} label="4:30 pm - 5:00 pm" primaryText="4:30 pm - 5:00 pm" />
+        
+        {this.state.timeArray.map((fieldInfo, index) => this.menuItem(fieldInfo, index))}
+        
       </DropDownMenu>
     );
   }

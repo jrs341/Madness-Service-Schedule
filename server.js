@@ -91,16 +91,29 @@ app.get("/checkCustomerDB/:email", function(req, res){
   });
 });
 
-app.get("/scheduleForToday/:date", function(req, res){
-    ServiceSchedule.find({"date": req.params.date}, function(error, doc) {
-    if (error) {
-      res.send(error);
-      console.log(error);
-    }
-    else {
-      console.log(doc);
-      res.send(doc);
-    }
+app.get("/availableTimes/:date/:location", function(req, res){
+	ServiceSchedule.find({"date": req.params.date, "location": req.params.location},{time: 1}, function(error, doc) {
+		if (error) {
+	      res.send(error);
+	      console.log(error);
+	    }
+	    else {
+	      console.log(doc);
+	      res.send(doc);
+	    }	
+	});
+});
+
+app.get("/scheduleForToday/:date/:location", function(req, res){
+    ServiceSchedule.find({"date": req.params.date, "location": req.params.location}, function(error, doc) {
+	    if (error) {
+	      res.send(error);
+	      console.log(error);
+	    }
+	    else {
+	      console.log(doc);
+	      res.send(doc);
+	    }
   });
 });
 
