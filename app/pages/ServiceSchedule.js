@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from "react-redux"
 import { Link } from 'react-router'
-import { Row, Col } from 'react-grid-system'
 import { Card, CardTitle, CardHeader, CardText, CardActions } from 'material-ui/Card'
-// import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import {List, ListItem} from 'material-ui/List'
 import axios from 'axios'
 import LocationDropDown from '../Components/LocationDropDown'
@@ -34,36 +32,45 @@ export default class ServiceSchedule extends React.Component {
 constructor(props) {
 	super(props);
 	this.state = {
-		scheduleInfo: [],
-		given_name: '',
-		family_name: '',
-		phone_number: '',
-		email: '',
-		vehicle_make: '',
-		vehicle_model: '',
-		vehicle_year: '',
-		requested_service: '',
-		scheduled_by: '' 
+		scheduleInfo: []
+		// given_name: '',
+		// family_name: '',
+		// phone_number: '',
+		// email: '',
+		// vehicle_make: '',
+		// vehicle_model: '',
+		// vehicle_year: '',
+		// requested_service: '',
+		// scheduled_by: '' 
 	};
 
 	this.scheduleForToday = this.scheduleForToday.bind(this);
+	this.getSchedule = this.getSchedule.bind(this);
 	this.card = this.card.bind(this);
 	this.updateScheduleInfo = this.updateScheduleInfo.bind(this);
 }
 
 componentWillMount() {
+	console.log('will mount' + this.props.serviceDate);
 	this.scheduleForToday();
+}
+// without the if else statement an infinate loop is created
+componentWillUpdate(nextProps, nextState){
+	console.log('will update');
+	if (this.props.serviceDate != nextProps.serviceDate){
+		this.getSchedule(nextProps.serviceDate, nextProps.location);
+	}
+	else {
+		console.log(this.props.serviceDate);
+	}
 }
 
 card(fieldInfo, index) {
-	// console.log(fieldInfo);
-	// for (var i=0; i<=index; i++) {
-	// 	console.log(this.state.scheduleInfo[i]);
-	// }
 	return (
 		 <Card>
 		    <CardHeader
-		      title= {fieldInfo.time} leftIcon={<ActionBuild />}
+		      title= {fieldInfo.time} 
+		      avatar={<ActionBuild />}
 		      subtitle={fieldInfo.given_name + ' ' + fieldInfo.family_name + ' ' + fieldInfo.requested_service}
 		      actAsExpander={true}
 		      showExpandableButton={true}
@@ -78,8 +85,6 @@ card(fieldInfo, index) {
 			      <ListItem primaryText={fieldInfo.email} leftIcon={<ContactEmail />} />
 			      <ListItem primaryText={fieldInfo.phone_number} leftIcon={<ContactPhone />} />
 			      <ListItem primaryText={fieldInfo.vehicle_year + ' ' + fieldInfo.vehicle_make + ' ' + fieldInfo.vehicle_model} leftIcon={<Vehicle />} />
-			      {/*<ListItem primaryText={fieldInfo.vehicle_make} leftIcon={<Vehicle />} />
-			      <ListItem primaryText={fieldInfo.vehicle_model} leftIcon={<Vehicle />} />*/}
 			      <ListItem primaryText={fieldInfo.scheduled_by} leftIcon={<Employee />} />
 			    </List>
 			    <Divider />
@@ -115,6 +120,7 @@ updateScheduleInfo(getRequestResponse) {
     this.setState({scheduleInfo: getRequestResponse});
 }
 
+// default schedule when component mounts default to today and austin
 scheduleForToday = () => {
 	axios({
       type: 'GET',
@@ -131,12 +137,36 @@ scheduleForToday = () => {
     });
 }
 
+getSchedule = (date, location) => {
+
+	axios({
+      type: 'GET',
+      url: '/getSchedule/' + date + '/' + location
+    })
+	// axios.get('/getSchedule/',{
+	// 	params: {
+	// 		date: date,
+	// 		location: this.props.location
+	// 	}
+	// })
+	.then((response)=> {
+    	// console.log(response.data);
+    	if(response.data == '') {
+    		console.log('nothing scheduled for today');	
+    	}
+    	else {
+    		console.log('today s schedule');
+    		this.updateScheduleInfo(response.data);
+    	}
+    });
+}
+
   render() {
     return (
     	<div>
     		<h1> Madness AutoWorks Service Schedule for 
-    			<LocationDropDown /> 
     			<DatePicker />  
+    			<LocationDropDown /> 
     		</h1>
     		{this.state.scheduleInfo.map((fieldInfo, index) => this.card(fieldInfo, index))}
     	</div>

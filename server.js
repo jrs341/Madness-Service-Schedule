@@ -104,6 +104,21 @@ app.get("/scheduleForToday/:date", function(req, res){
   });
 });
 
+app.get("/getSchedule/:date/:location", function(req, res){
+	console.log(req.params.date);
+	console.log(req.params.location);
+    ServiceSchedule.find({"date": req.params.date, "location": req.params.location}, function(error, doc) {
+    if (error) {
+      res.send(error);
+      console.log(error);
+    }
+    else {
+      console.log(doc);
+      res.send(doc);
+    }
+  });
+});
+
 app.listen(PORT, function() {
   console.log(`Listening On Port: ${PORT}`);
 });

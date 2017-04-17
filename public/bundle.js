@@ -39158,8 +39158,6 @@ exports.default = undefined;
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _dec, _class;
-// import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
-
 
 var _react = __webpack_require__(1);
 
@@ -39168,8 +39166,6 @@ var _react2 = _interopRequireDefault(_react);
 var _reactRedux = __webpack_require__(47);
 
 var _reactRouter = __webpack_require__(148);
-
-var _reactGridSystem = __webpack_require__(141);
 
 var _Card = __webpack_require__(397);
 
@@ -39256,20 +39252,44 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 			});
 		};
 
+		_this.getSchedule = function (date, location) {
+
+			(0, _axios2.default)({
+				type: 'GET',
+				url: '/getSchedule/' + date + '/' + location
+			})
+			// axios.get('/getSchedule/',{
+			// 	params: {
+			// 		date: date,
+			// 		location: this.props.location
+			// 	}
+			// })
+			.then(function (response) {
+				// console.log(response.data);
+				if (response.data == '') {
+					console.log('nothing scheduled for today');
+				} else {
+					console.log('today s schedule');
+					_this.updateScheduleInfo(response.data);
+				}
+			});
+		};
+
 		_this.state = {
-			scheduleInfo: [],
-			given_name: '',
-			family_name: '',
-			phone_number: '',
-			email: '',
-			vehicle_make: '',
-			vehicle_model: '',
-			vehicle_year: '',
-			requested_service: '',
-			scheduled_by: ''
+			scheduleInfo: []
+			// given_name: '',
+			// family_name: '',
+			// phone_number: '',
+			// email: '',
+			// vehicle_make: '',
+			// vehicle_model: '',
+			// vehicle_year: '',
+			// requested_service: '',
+			// scheduled_by: '' 
 		};
 
 		_this.scheduleForToday = _this.scheduleForToday.bind(_this);
+		_this.getSchedule = _this.getSchedule.bind(_this);
 		_this.card = _this.card.bind(_this);
 		_this.updateScheduleInfo = _this.updateScheduleInfo.bind(_this);
 		return _this;
@@ -39278,20 +39298,30 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 	_createClass(ServiceSchedule, [{
 		key: 'componentWillMount',
 		value: function componentWillMount() {
+			console.log('will mount' + this.props.serviceDate);
 			this.scheduleForToday();
+		}
+		// without the if else statement an infinate loop is created
+
+	}, {
+		key: 'componentWillUpdate',
+		value: function componentWillUpdate(nextProps, nextState) {
+			console.log('will update');
+			if (this.props.serviceDate != nextProps.serviceDate) {
+				this.getSchedule(nextProps.serviceDate, nextProps.location);
+			} else {
+				console.log(this.props.serviceDate);
+			}
 		}
 	}, {
 		key: 'card',
 		value: function card(fieldInfo, index) {
-			// console.log(fieldInfo);
-			// for (var i=0; i<=index; i++) {
-			// 	console.log(this.state.scheduleInfo[i]);
-			// }
 			return _react2.default.createElement(
 				_Card.Card,
 				null,
 				_react2.default.createElement(_Card.CardHeader, {
-					title: fieldInfo.time, leftIcon: _react2.default.createElement(_build2.default, null),
+					title: fieldInfo.time,
+					avatar: _react2.default.createElement(_build2.default, null),
 					subtitle: fieldInfo.given_name + ' ' + fieldInfo.family_name + ' ' + fieldInfo.requested_service,
 					actAsExpander: true,
 					showExpandableButton: true
@@ -39323,6 +39353,9 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 		value: function updateScheduleInfo(getRequestResponse) {
 			this.setState({ scheduleInfo: getRequestResponse });
 		}
+
+		// default schedule when component mounts default to today and austin
+
 	}, {
 		key: 'render',
 		value: function render() {
@@ -39335,8 +39368,8 @@ var ServiceSchedule = (_dec = (0, _reactRedux.connect)(function (store) {
 					'h1',
 					null,
 					' Madness AutoWorks Service Schedule for',
-					_react2.default.createElement(_LocationDropDown2.default, null),
-					_react2.default.createElement(_DatePicker2.default, null)
+					_react2.default.createElement(_DatePicker2.default, null),
+					_react2.default.createElement(_LocationDropDown2.default, null)
 				),
 				this.state.scheduleInfo.map(function (fieldInfo, index) {
 					return _this2.card(fieldInfo, index);
