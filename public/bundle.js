@@ -39406,6 +39406,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var menuItems = [];
+var reservedTimes = [];
+var timeArray = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
+
 var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
     location: store.locationState.location,
@@ -39423,7 +39427,6 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
     _this.serviceTimeState = function (event, index, value) {
       _this.props.dispatch((0, _serviceTimeActions.changeServiceTimeState)(value));
       _this.setState({ value: value });
-      console.log('serviceTiemState' + value);
     };
 
     _this.getAvailableTimes = function (date, location) {
@@ -39435,11 +39438,15 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
         console.log(response.data);
         if (response.data == '') {
           console.log('nothing scheduled for today');
-          _this.setState({ reservedTimes: [] });
+          // this.setState({reservedTimes: []});
+          reservedTimes = [];
+          _this.menuItem();
         } else {
           console.log('today s schedule');
-          _this.setState({ reservedTimes: response.data });
-          console.log(_this.state.reservedTimes);
+          // this.setState({reservedTimes: response.data});
+          // console.log(this.state.reservedTimes);
+          reservedTimes = response.data;
+          _this.menuItem();
         }
       });
     };
@@ -39452,6 +39459,7 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
 
     _this.getAvailableTimes = _this.getAvailableTimes.bind(_this);
     _this.serviceTimeState = _this.serviceTimeState.bind(_this);
+    _this.menuItem = _this.menuItem.bind(_this);
     return _this;
   }
 
@@ -39470,30 +39478,64 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
     }
   }, {
     key: 'menuItem',
-    value: function menuItem(fieldInfo, index) {
-      if (this.state.reservedTimes.length == 0) {
-        return _react2.default.createElement(_MenuItem2.default, { key: index, value: this.state.timeArray[index].time, label: this.state.timeArray[index].time, primaryText: this.state.timeArray[index].time });
+    value: function menuItem() {
+      console.log('menuItem');
+      if (reservedTimes.length == 0) {
+        console.log('menuItem If');
+        for (var index = 0; timeArray.length; index++) {
+
+          menuItems.push(_react2.default.createElement(_MenuItem2.default, { key: index, value: timeArray[index], label: timeArray[index], primaryText: timeArray[index] }));
+        }
       } else {
-        for (var j = 0; j < this.state.reservedTimes.length; j++) {
-          if (this.state.timeArray[index].time == this.state.reservedTimes[j].time) {
-            return _react2.default.createElement(_MenuItem2.default, { disabled: true, key: index, value: this.state.timeArray[index].time, label: this.state.timeArray[index].time, primaryText: this.state.timeArray[index].time });
-          } else {
-            return _react2.default.createElement(_MenuItem2.default, { key: index, value: this.state.timeArray[index].time, label: this.state.timeArray[index].time, primaryText: this.state.timeArray[index].time });
+        loop1: for (var index = 0; index < timeArray.length; index++) {
+          loop2: for (var j = 0; j < reservedTimes.length; j++) {
+            if (timeArray[index] == reservedTimes[j].time) {
+              menuItems.push(_react2.default.createElement(_MenuItem2.default, { disabled: true, key: index, value: timeArray[index], label: timeArray[index], primaryText: timeArray[index] }));
+              continue loop1;
+            } else {}
           }
+          menuItems.push(_react2.default.createElement(_MenuItem2.default, { key: index, value: timeArray[index], label: timeArray[index], primaryText: timeArray[index] }));
         }
       }
+      console.log(menuItems);
+      return _react2.default.createElement(
+        'div',
+        null,
+        menuItems
+      );
     }
+
+    // menuItem(fieldInfo, index) {
+    //   if (this.state.reservedTimes.length == 0) {
+    //     return (
+    //       <MenuItem key={index} value={this.state.timeArray[index].time} label={this.state.timeArray[index].time} primaryText={this.state.timeArray[index].time} />
+    //     );
+    //   }
+    //   else {
+    //     for (var j=0; j<this.state.reservedTimes.length; j++) {
+    //       console.log(this.state.reservedTimes[j].time);
+    //       console.log(j);
+    //       if (this.state.timeArray[index].time == this.state.reservedTimes[j].time){
+    //         return (
+    //           <MenuItem disabled={true} key={index} value={this.state.timeArray[index].time} label={this.state.timeArray[index].time} primaryText={this.state.timeArray[index].time} />
+    //         );
+    //       }
+    //       else {
+    //         return (
+    //           <MenuItem key={index} value={this.state.timeArray[index].time} label={this.state.timeArray[index].time} primaryText={this.state.timeArray[index].time} />
+    //         ); 
+    //       }
+    //     } 
+    //   }
+    // }
+
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
-
       return _react2.default.createElement(
         _DropDownMenu2.default,
         { value: this.state.value, onChange: this.serviceTimeState },
-        this.state.timeArray.map(function (fieldInfo, index) {
-          return _this2.menuItem(fieldInfo, index);
-        })
+        menuItems
       );
     }
   }]);
