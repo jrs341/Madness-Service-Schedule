@@ -132,6 +132,18 @@ app.get("/getSchedule/:date/:location", function(req, res){
   });
 });
 
+app.post('/serviceStatus', function(req, res) {
+	console.log(req.body);
+	ServiceSchedule.findOneAndUpdate({email: req.body.email}, req.body, function(error, doc){
+		if(error){
+			res.send(error);
+		}
+		else{
+			res.send(doc);
+		}
+	});
+});
+
 app.listen(PORT, function() {
   console.log(`Listening On Port: ${PORT}`);
 });

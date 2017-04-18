@@ -1,7 +1,5 @@
 import React from 'react'
-
 import { Container } from 'react-grid-system'
-
 // --------------Setup for Material-Ui -----------------------------
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import injectTapEventPlugin from 'react-tap-event-plugin'
@@ -25,11 +23,9 @@ export default class Main extends React.Component {
     return (
       <MuiThemeProvider>
         <div>
-          
           <div style={style}>
             {this.props.children}
           </div>
-          
         </div>
       </MuiThemeProvider>
     );

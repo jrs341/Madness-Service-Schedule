@@ -44,7 +44,7 @@ export default class TimeDropDown extends React.Component {
   serviceTimeState = (event, index, value) => {
     this.props.dispatch(changeServiceTimeState(value));
     this.setState({value});
-    console.log(value);
+    console.log('serviceTiemState' + value);
   }
 
   getAvailableTimes = (date, location) => {

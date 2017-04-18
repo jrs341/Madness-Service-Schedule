@@ -1,56 +1,57 @@
 export default function reducer(state={
   serviceTime: 1
 }, action) {
+	// return {...state, serviceTime: action.payload}
   switch (action.type) {
     case 'SERVICE_TIME':
     	switch (action.payload) {
-    		case 1:
-	    		return {...state, serviceTime: 1}
+    		case '9:00':
+	    		return {...state, serviceTime: '9:00'}
 	    		break;
-	    	case 2:
-	    		return {...state, serviceTime: 2}
+	    	case '9:30':
+	    		return {...state, serviceTime: '9:30'}
 	    		break;
-	    	case 3:
-	    		return {...state, serviceTime: 3}
+	    	case '10:00':
+	    		return {...state, serviceTime: '10:00'}
 	    		break;
-	    	case 4:
-	    		return {...state, serviceTime: 4}
+	    	case '10:30':
+	    		return {...state, serviceTime: '10:30'}
 	    		break;
-	    	case 5:
-	    		return {...state, serviceTime: 5}
+	    	case '11:00':
+	    		return {...state, serviceTime: '11:00'}
 	    		break;
-	    	case 6:
-	    		return {...state, serviceTime: 6}
+	    	case '11:30':
+	    		return {...state, serviceTime: '11:30'}
 	    		break;
-	    	case 7:
-	    		return {...state, serviceTime: 7}
+	    	case '12:00':
+	    		return {...state, serviceTime: '12:00'}
 	    		break;
-	    	case 8:
-	    		return {...state, serviceTime: 8}
+	    	case '12:30':
+	    		return {...state, serviceTime: '12:30'}
 	    		break;
-	    	case 9:
-	    		return {...state, serviceTime: 9}
+	    	case '1:00':
+	    		return {...state, serviceTime: '1:00'}
 	    		break;
-	    	case 10:
-	    		return {...state, serviceTime: 10}
+	    	case '1:30':
+	    		return {...state, serviceTime: '1:30'}
 	    		break;
-	    	case 11:
-	    		return {...state, serviceTime: 11}
+	    	case '2:00':
+	    		return {...state, serviceTime: '2:00'}
 	    		break;
-	    	case 12:
-	    		return {...state, serviceTime: 12}
+	    	case '2:30':
+	    		return {...state, serviceTime: '2:30'}
 	    		break;
-	    	case 13:
-	    		return {...state, serviceTime: 13}
+	    	case '3:00':
+	    		return {...state, serviceTime: '3:00'}
 	    		break;
-	    	case 14:
-	    		return {...state, serviceTime: 14}
+	    	case '3:30':
+	    		return {...state, serviceTime: '3:30'}
 	    		break;
-	    	case 15:
-	    		return {...state, serviceTime: 15}
+	    	case '4:00':
+	    		return {...state, serviceTime: '4:00'}
 	    		break;
-	    	case 16:
-	    		return {...state, serviceTime: 16}
+	    	case '4:30':
+	    		return {...state, serviceTime: '4:30'}
 	    		break;
     	}
     default:

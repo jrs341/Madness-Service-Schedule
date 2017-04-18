@@ -13,9 +13,11 @@ import ContactPhone from 'material-ui/svg-icons/communication/phone'
 import Vehicle from 'material-ui/svg-icons/maps/directions-car'
 import Employee from 'material-ui/svg-icons/action/account-box'
 import Divider from 'material-ui/Divider'
+import Checkbox from 'material-ui/Checkbox'
 
 var date = new Date();
 var dateString = date.toString().split(' ', 4).join(' ');
+var serviceStatus = 'red';
 
 @connect((store) => {
 	return {
@@ -34,7 +36,8 @@ constructor(props) {
 	this.state = {
 		scheduleInfo: [],
 		cardDisplay: 'none',
-		scheduleStatus: ''
+		scheduleStatus: '',
+		serviceStatus: 'red'
 		// given_name: '',
 		// family_name: '',
 		// phone_number: '',
@@ -50,6 +53,7 @@ constructor(props) {
 	this.getSchedule = this.getSchedule.bind(this);
 	this.card = this.card.bind(this);
 	this.updateScheduleInfo = this.updateScheduleInfo.bind(this);
+	this.serviceStatus = this.serviceStatus.bind(this);
 }
 
 componentWillMount() {
@@ -67,27 +71,42 @@ componentWillUpdate(nextProps, nextState){
 	}
 }
 
-card(fieldInfo, index) {
+serviceStatus(event, isInputChecked) {
+	console.log('serviceStatus');
+	console.log(event.target.name);
+	alert('are you sure');
+	// console.log(isInputChecked);
+	axios.post('/serviceStatus',
+		{ 
+			email: event.target.name,
+			completed: 1
+		}).then(function(response){
+			console.log('updated service status');
+		});
+}
+
+card(fieldInfo, index) {      	
 	return (
-		 <Card style={{display: this.state.cardDisplay}}>
+		 <Card key={index} style={{display: this.state.cardDisplay}}>
 		    <CardHeader
 		      title= {fieldInfo.time} 
-		      avatar={<ActionBuild />}
-		      subtitle={fieldInfo.given_name + ' ' + fieldInfo.family_name + ' ' + fieldInfo.requested_service}
+		      avatar={<ActionBuild style={{color: fieldInfo.completed ? 'green' : 'red'}} />}
+		      subtitle={fieldInfo.given_name + ' ' + fieldInfo.family_name + ' ' + fieldInfo.service_request}
 		      actAsExpander={true}
 		      showExpandableButton={true}
 		    />
-		    <CardActions>
-		      <RaisedButton label="Service Complete" />
+		    {/*<CardActions>
+		      <RaisedButton id={fieldInfo.email} label="Service Complete" onTouchTap={this.serviceStatus(fieldInfo.email)} />
 		      <RaisedButton label="Reschedule" />
 		      <RaisedButton label="Cancel" />
-		    </CardActions>
+		    </CardActions>*/}
 		    <CardText expandable={true}>
 		    	<List>
 			      <ListItem primaryText={fieldInfo.email} leftIcon={<ContactEmail />} />
 			      <ListItem primaryText={fieldInfo.phone_number} leftIcon={<ContactPhone />} />
 			      <ListItem primaryText={fieldInfo.vehicle_year + ' ' + fieldInfo.vehicle_make + ' ' + fieldInfo.vehicle_model} leftIcon={<Vehicle />} />
 			      <ListItem primaryText={fieldInfo.scheduled_by} leftIcon={<Employee />} />
+			      <ListItem primaryText="Service Completed" leftCheckbox={<Checkbox name={fieldInfo.email} onCheck={this.serviceStatus} />} />
 			    </List>
 			    <Divider />
 		      {/*<Table>

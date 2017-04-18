@@ -33,7 +33,7 @@ export default class ServiceForm extends React.Component {
 			vehicle_make: '',
 			vehicle_model: '',
 			vehicle_year: '',
-			requested_service: '' 
+			service_request: '' 
 		};
 
 		this.updateFormInfo = this.updateFormInfo.bind(this);
@@ -57,7 +57,7 @@ export default class ServiceForm extends React.Component {
           vehicle_make: this.state.vehicle_make,
           vehicle_model: this.state.vehicle_model,
           vehicle_year: this.state.vehicle_year,
-          requested_service: this.state.requested_service
+          service_request: this.state.service_request
 		}).then(function(response){
           console.log('added customer to DB');
         });
@@ -72,9 +72,11 @@ export default class ServiceForm extends React.Component {
         	if(response.data == '') {
         		console.log('email not found adding to customer DB');
         		this.addCustomerToDB();
+        		this.addToServiceSchedule();
         	}
         	else {
         		console.log('found customer in DB');
+        		this.addToServiceSchedule();
         	}
           
         });
@@ -94,7 +96,7 @@ export default class ServiceForm extends React.Component {
           vehicle_make: this.state.vehicle_make,
           vehicle_model: this.state.vehicle_model,
           vehicle_year: this.state.vehicle_year,
-          requested_service: this.state.requested_service
+          service_request: this.state.service_request
         }).then(function(response){
           console.log('added to service schedule');
         });
@@ -193,7 +195,7 @@ export default class ServiceForm extends React.Component {
 						<RaisedButton
 			                label="Submit"
 			                primary={true}
-			                onClick={this.submitFormInfo}
+			                onClick={this.checkCustomerDB}
 			            /> 
 						<Link to='serviceSchedule'>
 			              <RaisedButton

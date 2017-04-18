@@ -20,8 +20,9 @@ var ServiceScheduleSchema = new Schema({
     type: String
   	},
 
-  	reserved: {
-    type: Boolean
+  	completed: {
+    type: Boolean,
+    default: 0
   	},
 
     given_name: {
