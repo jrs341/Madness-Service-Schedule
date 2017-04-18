@@ -39439,12 +39439,13 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
         } else {
           console.log('today s schedule');
           _this.setState({ reservedTimes: response.data });
+          console.log(_this.state.reservedTimes);
         }
       });
     };
 
     _this.state = {
-      value: 1,
+      value: '9:00',
       reservedTimes: [],
       timeArray: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }]
     };
@@ -39863,6 +39864,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'email',
+								value: this.state.email,
 								type: 'text',
 								hintText: 'Email',
 								floatingLabelText: 'Email',
@@ -39871,6 +39873,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'given_name',
+								value: this.state.given_name,
 								type: 'text',
 								hintText: 'First Name',
 								floatingLabelText: 'First Name',
@@ -39879,6 +39882,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'family_name',
+								value: this.state.family_name,
 								type: 'text',
 								hintText: 'Last Name',
 								floatingLabelText: 'Last Name',
@@ -39887,6 +39891,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'phone_number',
+								value: this.state.phone_number,
 								type: 'text',
 								hintText: 'Phone Number',
 								floatingLabelText: 'Phone Number',
@@ -39895,6 +39900,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'vehicle_make',
+								value: this.state.vehicle_make,
 								type: 'text',
 								hintText: 'Vehicle Make',
 								floatingLabelText: 'Vehicle Make',
@@ -39903,6 +39909,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'vehicle_model',
+								value: this.state.vehicle_model,
 								type: 'text',
 								hintText: 'Vehicle Model',
 								floatingLabelText: 'Vehicle Model',
@@ -39911,6 +39918,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'vehicle_year',
+								vehicle: this.state.vehicle_year,
 								type: 'text',
 								hintText: 'Vehicle Year',
 								floatingLabelText: 'Vehicle Year',
@@ -39919,6 +39927,7 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 							_react2.default.createElement(_TextField2.default, {
 								style: { display: 'block' },
 								id: 'service_request',
+								value: this.state.service_request,
 								type: 'text',
 								hintText: 'Requested Service',
 								floatingLabelText: 'Requested Service',

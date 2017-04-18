@@ -128,6 +128,7 @@ export default class ServiceForm extends React.Component {
 			            <TextField
 			            	style={{display: 'block'}}
 			                id='email'
+			                value={this.state.email}
 			                type='text'
 			                hintText='Email'
 			                floatingLabelText='Email'
@@ -136,6 +137,7 @@ export default class ServiceForm extends React.Component {
 						<TextField
 							style={{display: 'block'}}
 			                id='given_name'
+			                value={this.state.given_name}
 			                type='text'
 			                hintText='First Name'
 			                floatingLabelText='First Name'
@@ -144,6 +146,7 @@ export default class ServiceForm extends React.Component {
 			            <TextField
 			            	style={{display: 'block'}}
 			                id='family_name'
+			                value={this.state.family_name}
 			                type='text'
 			                hintText='Last Name'
 			                floatingLabelText='Last Name'
@@ -152,6 +155,7 @@ export default class ServiceForm extends React.Component {
 			            <TextField
 			            	style={{display: 'block'}}
 			                id='phone_number'
+			                value={this.state.phone_number}
 			                type='text'
 			                hintText='Phone Number'
 			                floatingLabelText='Phone Number'
@@ -160,6 +164,7 @@ export default class ServiceForm extends React.Component {
 			            <TextField
 			            	style={{display: 'block'}}
 			                id='vehicle_make'
+			                value={this.state.vehicle_make}
 			                type='text'
 			                hintText='Vehicle Make'
 			                floatingLabelText='Vehicle Make'
@@ -168,6 +173,7 @@ export default class ServiceForm extends React.Component {
 			            <TextField
 			            	style={{display: 'block'}}
 			                id='vehicle_model'
+			                value={this.state.vehicle_model}
 			                type='text'
 			                hintText='Vehicle Model'
 			                floatingLabelText='Vehicle Model'
@@ -176,6 +182,7 @@ export default class ServiceForm extends React.Component {
 			            <TextField
 			            	style={{display: 'block'}}
 			                id='vehicle_year'
+			                vehicle={this.state.vehicle_year}
 			                type='text'
 			                hintText='Vehicle Year'
 			                floatingLabelText='Vehicle Year'
@@ -184,6 +191,7 @@ export default class ServiceForm extends React.Component {
 			            <TextField
 			            	style={{display: 'block'}}
 			                id='service_request'
+			                value={this.state.service_request}
 			                type='text'
 			                hintText='Requested Service'
 			                floatingLabelText='Requested Service'

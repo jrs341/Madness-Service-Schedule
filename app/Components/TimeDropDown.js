@@ -18,7 +18,7 @@ export default class TimeDropDown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 1,
+      value: '9:00',
       reservedTimes: [],
       timeArray: [{time:'9:00'},{time:'9:30'}, {time:'10:00'}, {time:'10:30'}, {time:'11:00'}, {time:'11:30'}, {time:'12:00'}, {time:'12:30'}, {time:'1:00'}, {time:'1:30'}, {time:'2:00'}, {time:'2:30'}, {time:'3:00'}, {time:'3:30'}, {time:'4:00'}, {time:'4:30'}]
     };
@@ -43,7 +43,7 @@ export default class TimeDropDown extends React.Component {
 
   serviceTimeState = (event, index, value) => {
     this.props.dispatch(changeServiceTimeState(value));
-    this.setState({value});
+    this.setState({value: value});
     console.log('serviceTiemState' + value);
   }
 
@@ -61,6 +61,7 @@ export default class TimeDropDown extends React.Component {
         else {
           console.log('today s schedule');
           this.setState({reservedTimes: response.data});
+          console.log(this.state.reservedTimes);
         }
     });
   }
