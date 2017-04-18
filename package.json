@@ -45,6 +45,7 @@
     "redux-promise-middleware": "^4.2.0",
     "redux-thunk": "^2.1.0",
     "require": "^2.4.20",
+    "babel-loader": "^6.2.0",
     "webpack": "^2.2.1",
     "webpack-dev-server": "^2.4.2"
   },
