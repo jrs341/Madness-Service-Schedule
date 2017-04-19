@@ -9,56 +9,62 @@ var Schema = mongoose.Schema;
 var ServiceScheduleSchema = new Schema({
 
   	location: {
-  	type: String
+  	 type: String
   	},
 
   	date: {
-    type: String
+      type: String
   	},
 
   	time: {
-    type: String
+      type: String
   	},
 
   	completed: {
-    type: Boolean,
-    default: 0
+      type: Boolean,
+      default: 0
   	},
 
+    booked: {
+      type: Boolean,
+      default: true
+    },
+
     given_name: {
-    type: String,
-    trim: true,
-    required: "First Name Required"
+      type: String,
+      trim: true,
+      // required: "First Name Required"
     },
 
     family_name: {
-    type: String,
-    trim: true,
-    // required: "Last Name Required",
+      type: String,
+      trim: true,
+      // required: "Last Name Required"
     },
     phone_number: {
-    type: String,
-    trim: true,
-    // required: "Phone Number Required"
+      type: String,
+      trim: true,
+      // required: "Phone Number Required"
     },
 
   	email: {
-  	type: String
+    	type: String,
+      trim: true
   	},
 
     vehicle_make: {
-    type: String,
-    trim: true
+      type: String,
+      trim: true
     },
 
     vehicle_model: {
-    type: String,
-    trim: true
+      type: String,
+      trim: true
     },
 
     vehicle_year: {
-    type: Number,
-    trim: true
+      type: Number,
+      trim: true
     },
 
     scheduled_by: {
@@ -66,7 +72,7 @@ var ServiceScheduleSchema = new Schema({
     },
 
     service_request: { 
-    type: String
+      type: String
     }
  
 });

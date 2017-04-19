@@ -73,10 +73,12 @@ export default class ServiceForm extends React.Component {
         		console.log('email not found adding to customer DB');
         		this.addCustomerToDB();
         		this.addToServiceSchedule();
+        		location.reload();
         	}
         	else {
         		console.log('found customer in DB');
         		this.addToServiceSchedule();
+        		location.reload();
         	}
           
         });
@@ -106,14 +108,14 @@ export default class ServiceForm extends React.Component {
     	this.checkCustomerDB();
     	this.addToServiceSchedule();
     }
-	
+
   render() {
     return (
     	<Row>
 			<Col md={8} offset={{ md: 2 }}>
-				<Card style={{transform: 'translateY(26%)'}}>
+				<Card>
 					<CardTitle
-						title='Schedule Service Form'>
+						title='Schedule Service'>
 					</CardTitle>
 					<CardText>
 

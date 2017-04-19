@@ -39408,7 +39408,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var menuItems = [];
 var reservedTimes = [];
-var timeArray = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
+var timeArray = [{ time: '9:00', booked: false }, { time: '9:30', booked: false }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }];
+// const timeArray = ['9:00','9:30','10:00','10:30','11:00','11:30','12:00','12:30','1:00','1:30','2:00','2:30','3:00','3:30','4:00','4:30']
 
 var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
   return {
@@ -39424,12 +39425,74 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
 
     var _this = _possibleConstructorReturn(this, (TimeDropDown.__proto__ || Object.getPrototypeOf(TimeDropDown)).call(this, props));
 
-    _this.serviceTimeState = function (event, index, value) {
-      _this.props.dispatch((0, _serviceTimeActions.changeServiceTimeState)(value));
-      _this.setState({ value: value });
+    _this.timeArray = _this.state = {
+      value: '9:00',
+      reservedTimes: [],
+      timeArray: [{ time: '9:00', booked: true }, { time: '9:30', booked: false }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }]
     };
 
-    _this.getAvailableTimes = function (date, location) {
+    _this.getAvailableTimes = _this.getAvailableTimes.bind(_this);
+    _this.serviceTimeState = _this.serviceTimeState.bind(_this);
+    _this.menuItem = _this.menuItem.bind(_this);
+    _this.updateBookedStatus = _this.updateBookedStatus.bind(_this);
+    return _this;
+  }
+
+  _createClass(TimeDropDown, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      console.log('will mount');
+      // this.getAvailableTimes(this.props.serviceDate, this.props.location);
+      // this.updateBookedStatus();
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      console.log('did mount');
+      this.getAvailableTimes(this.props.serviceDate, this.props.location);
+      // setTimeout(this.updateBookedStatus(),1000);
+    }
+  }, {
+    key: 'componentWillUpdate',
+    value: function componentWillUpdate(nextProps, nextState) {
+      // this.updateBookedStatus();
+      console.log('will update');
+      if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location) {
+        this.getAvailableTimes(nextProps.serviceDate, nextProps.location);
+      } else {}
+    }
+  }, {
+    key: 'updateBookedStatus',
+    value: function updateBookedStatus() {
+      console.log('update booked status');
+      for (var i = 0; i < timeArray.length; i++) {
+        console.log(reservedTimes);
+        for (var j = 0; j < reservedTimes.length; j++) {
+          if (timeArray[i].time == reservedTimes[j].time) {
+            console.log('equal');
+            timeArray[i].booked = true;
+            console.log(timeArray);
+          }
+        }
+        console.log(i);
+      }
+      // this.props.dispatch(changeServiceTimeState(value));
+      // this.setState({value: value});
+    }
+  }, {
+    key: 'serviceTimeState',
+    value: function serviceTimeState(event, index, value) {
+      // console.log(event);
+      // console.log(index);
+      // console.log(value);
+      this.props.dispatch((0, _serviceTimeActions.changeServiceTimeState)(value));
+      this.setState({ value: value });
+      // this.menuItem;
+      this.updateBookedStatus();
+    }
+  }, {
+    key: 'getAvailableTimes',
+    value: function getAvailableTimes(date, location) {
 
       (0, _axios2.default)({
         type: 'GET',
@@ -39440,70 +39503,56 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
           console.log('nothing scheduled for today');
           // this.setState({reservedTimes: []});
           reservedTimes = [];
-          _this.menuItem();
+          // this.menuItem;
+          // this.updateBookedStatus();
         } else {
           console.log('today s schedule');
           // this.setState({reservedTimes: response.data});
+          // this.updateBookedStatus();
           // console.log(this.state.reservedTimes);
           reservedTimes = response.data;
-          _this.menuItem();
+          // this.menuItem;
+          // this.updateBookedStatus();
         }
       });
-    };
-
-    _this.state = {
-      value: '9:00',
-      reservedTimes: [],
-      timeArray: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }]
-    };
-
-    _this.getAvailableTimes = _this.getAvailableTimes.bind(_this);
-    _this.serviceTimeState = _this.serviceTimeState.bind(_this);
-    _this.menuItem = _this.menuItem.bind(_this);
-    return _this;
-  }
-
-  _createClass(TimeDropDown, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      this.getAvailableTimes(this.props.serviceDate, this.props.location);
-    }
-  }, {
-    key: 'componentWillUpdate',
-    value: function componentWillUpdate(nextProps, nextState) {
-      console.log('will update');
-      if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location) {
-        this.getAvailableTimes(nextProps.serviceDate, nextProps.location);
-      } else {}
     }
   }, {
     key: 'menuItem',
-    value: function menuItem() {
-      console.log('menuItem');
-      if (reservedTimes.length == 0) {
-        console.log('menuItem If');
-        for (var index = 0; timeArray.length; index++) {
-
-          menuItems.push(_react2.default.createElement(_MenuItem2.default, { key: index, value: timeArray[index], label: timeArray[index], primaryText: timeArray[index] }));
-        }
-      } else {
-        loop1: for (var index = 0; index < timeArray.length; index++) {
-          loop2: for (var j = 0; j < reservedTimes.length; j++) {
-            if (timeArray[index] == reservedTimes[j].time) {
-              menuItems.push(_react2.default.createElement(_MenuItem2.default, { disabled: true, key: index, value: timeArray[index], label: timeArray[index], primaryText: timeArray[index] }));
-              continue loop1;
-            } else {}
-          }
-          menuItems.push(_react2.default.createElement(_MenuItem2.default, { key: index, value: timeArray[index], label: timeArray[index], primaryText: timeArray[index] }));
-        }
-      }
-      console.log(menuItems);
-      return _react2.default.createElement(
-        'div',
-        null,
-        menuItems
-      );
+    value: function menuItem(fieldInfo, index) {
+      console.log('menu item');
+      return _react2.default.createElement(_MenuItem2.default, { disabled: timeArray[index].booked, key: index, value: timeArray[index].time, label: timeArray[index].time, primaryText: timeArray[index].time });
     }
+
+    // menuItem() {
+    //   console.log('menuItem');
+    //   if (reservedTimes.length == 0) {
+    //     console.log('menuItem If');
+    //     for (var index=0; timeArray.length; index++){
+    //         menuItems.push(<MenuItem key={index} value={timeArray[index]} label={timeArray[index]} primaryText={timeArray[index]} />);
+    //     }
+    //   }
+    //   else {
+    //     loop1:
+    //     for (var index=0; index<timeArray.length; index++) {
+    //       loop2:
+    //       for (var j=0; j<reservedTimes.length; j++) {
+    //         if (timeArray[index] == reservedTimes[j].time){
+    //           menuItems.push(<MenuItem disabled={true} key={index} value={timeArray[index]} label={timeArray[index]} primaryText={timeArray[index]} />);
+    //           continue loop1;
+    //         }
+    //         else { 
+    //         }
+    //       }
+    //       menuItems.push(<MenuItem key={index} value={timeArray[index]} label={timeArray[index]} primaryText={timeArray[index]} />);
+    //     }
+    //   }
+    //   console.log(menuItems);
+    //   return (
+    //     <div>
+    //     {menuItems}
+    //     </div>
+    //     );
+    // }
 
     // menuItem(fieldInfo, index) {
     //   if (this.state.reservedTimes.length == 0) {
@@ -39532,10 +39581,14 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
   }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         _DropDownMenu2.default,
         { value: this.state.value, onChange: this.serviceTimeState },
-        menuItems
+        timeArray.map(function (fieldInfo, index) {
+          return _this2.menuItem(fieldInfo, index);
+        })
       );
     }
   }]);
@@ -39832,9 +39885,11 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 					console.log('email not found adding to customer DB');
 					_this.addCustomerToDB();
 					_this.addToServiceSchedule();
+					location.reload();
 				} else {
 					console.log('found customer in DB');
 					_this.addToServiceSchedule();
+					location.reload();
 				}
 			});
 		};
@@ -39893,9 +39948,9 @@ var ServiceForm = (_dec = (0, _reactRedux.connect)(function (store) {
 					{ md: 8, offset: { md: 2 } },
 					_react2.default.createElement(
 						_Card.Card,
-						{ style: { transform: 'translateY(26%)' } },
+						null,
 						_react2.default.createElement(_Card.CardTitle, {
-							title: 'Schedule Service Form' }),
+							title: 'Schedule Service' }),
 						_react2.default.createElement(
 							_Card.CardText,
 							null,
