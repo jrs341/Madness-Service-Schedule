@@ -2,15 +2,19 @@ import React from 'react'
 import { connect } from "react-redux"
 import { changeLocationState } from '../actions/locationDropDownActions'
 import { Link } from 'react-router'
-import { Row, Col } from 'react-grid-system'
+import { Container, Row, Col } from 'react-grid-system'
 import { Card, CardTitle, CardText, CardActions } from 'material-ui/Card'
 import axios from 'axios'
+import { changeServiceDateState } from '../actions/datePickerActions'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import DatePicker from '../Components/DatePicker'
 import TimeDropDown from '../Components/TimeDropDown'
 import LocationDropDown from '../Components/LocationDropDown'
 import EmployeeDropDown from '../Components/EmployeeDropDown'
+import Calendar from 'material-ui/DatePicker/Calendar'
+import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
+import ServiceCard from '../Components/ServiceCard'
 
 @connect((store) => {
 	return {
@@ -41,6 +45,8 @@ export default class ServiceForm extends React.Component {
 		this.checkCustomerDB = this.checkCustomerDB.bind(this);
 		this.addToServiceSchedule = this.addToServiceSchedule.bind(this);
 		this.submitFormInfo = this.submitFormInfo.bind(this);
+		this.disableWeekends = this.disableWeekends.bind(this);
+		this.serviceDateState = this.serviceDateState.bind(this);
 	}
 
 	updateFormInfo = (event, newInput) => {
@@ -109,25 +115,74 @@ export default class ServiceForm extends React.Component {
     	this.addToServiceSchedule();
     }
 
+    disableWeekends = (date) => {
+    return date.getDay() === 0 || date.getDay() === 6;
+  	}
+
+  	serviceDateState = (event, date) => {
+  		console.log(date);
+  		this.setState({controlledDate: date});
+    	var date = date.toString().split(' ', 4).join(' ');
+    	this.props.dispatch(changeServiceDateState(date));
+    	// console.log(date);
+  	}
+    // calendarStyle={{width: 250}}
+// md={8} offset={{ md: 2 }}
   render() {
     return (
-    	<Row>
-			<Col md={8} offset={{ md: 2 }}>
-				<Card>
+    	<div>
+	    	<Row>
+	    		<h1> Madness Autoworks Service Schedule for <LocationDropDown /></h1>
+	    	</Row>
+	    	{/*<DatePicker 
+	    	hideCalendarDate={true}
+	    	container={'inline'}
+	    	/>*/}
+	    	<Row>
+	    	<Col md={3}>
+	    	{/*<div style={{width: 310, display: 'inline-block'}}>*/}
+	    		<Calendar
+	    			disableYearSelection={true}
+		    		// shouldDisableDate={this.disableWeekends}
+		    		hideCalendarDate= 'true'
+		    		dialogContainerStyle={{width: 350}}
+		            firstDayOfWeek={1}	
+		            onTouchTapDay={this.serviceDateState}
+		        />
+		        <Link to='/serviceForm'>
+		        	<RaisedButton
+		        	  label="Schedule Service"
+	                  primary={true}
+	                /> 
+	            </Link>	
+	    	{/*</div>*/}
+	    	</Col>
+	    	<Col md={5} offset={{ md: 2 }}>
+	    	{/*<div style={{display: 'inline-block'}}>*/}
+	            <ServiceCard />
+    		{/*</div>*/}
+    		</Col>
+    		</Row>
+				{/*<Card>
 					<CardTitle
 						title='Schedule Service'>
-					</CardTitle>
-					<CardText>
-
 						<LocationDropDown />
+					</CardTitle>
+					<CardText>*/}
+	
+						{/*<LocationDropDown />*/}
 
-			            <DatePicker />
+			            {/*<DatePicker />*/}
 
-			            <TimeDropDown />
+			            {/*<TimeDropDown />*/}
 
-			            <EmployeeDropDown />
+			            {/*<EmployeeDropDown />*/}
+			            
+			            
+			            
 {/* Leave email as the first question and then map the rest of the fields and change function to onBlur to search and auto fill customer info*/}
-			            <TextField
+			            
+						{/*<TextField
 			            	style={{display: 'block'}}
 			                id='email'
 			                value={this.state.email}
@@ -136,6 +191,7 @@ export default class ServiceForm extends React.Component {
 			                floatingLabelText='Email'
 			               	onChange={this.updateFormInfo}
 			            />
+
 						<TextField
 							style={{display: 'block'}}
 			                id='given_name'
@@ -200,8 +256,8 @@ export default class ServiceForm extends React.Component {
 			               	onChange={this.updateFormInfo}
 			            />
 				            
-					</CardText>
-					<CardActions>
+					</CardText>*/}
+					{/*<CardActions>
 						<RaisedButton
 			                label="Submit"
 			                primary={true}
@@ -215,8 +271,9 @@ export default class ServiceForm extends React.Component {
 			            </Link> 
 					</CardActions>
 				</Card>
-			</Col>
-		</Row>
+			</Card>*/}
+		
+		</div>
     );
   }
 }

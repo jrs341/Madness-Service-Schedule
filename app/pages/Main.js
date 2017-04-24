@@ -2,7 +2,9 @@ import React from 'react'
 import { Container } from 'react-grid-system'
 // --------------Setup for Material-Ui -----------------------------
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import { cyan500 } from 'material-ui/styles/colors'
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
@@ -17,11 +19,20 @@ const style = {
   width: '100%'
 };
 
+const muiTheme = getMuiTheme({
+  calendar: {
+    width: 250
+  },
+  datePicker: {
+    selectColor: cyan500,
+  }
+});
+
 export default class Main extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div>
           <div style={style}>
             {this.props.children}

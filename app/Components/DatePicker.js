@@ -53,6 +53,9 @@ export default class ChooseDate extends React.Component {
         formatDate={this.formatDate}
         shouldDisableDate={this.disableWeekends}
         minDate={date}
+        container={'inline'}
+        dialogContainerStyle={{width: 200}}
+        
       />
     );
   }

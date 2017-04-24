@@ -6,6 +6,7 @@ import {List, ListItem} from 'material-ui/List'
 import axios from 'axios'
 import LocationDropDown from '../Components/LocationDropDown'
 import DatePicker from '../Components/DatePicker'
+// import ServiceCard from '../Components/ServiceCard'
 import RaisedButton from 'material-ui/RaisedButton'
 import ActionBuild from 'material-ui/svg-icons/action/build'
 import ContactEmail from 'material-ui/svg-icons/communication/email'
@@ -14,6 +15,7 @@ import Vehicle from 'material-ui/svg-icons/maps/directions-car'
 import Employee from 'material-ui/svg-icons/action/account-box'
 import Divider from 'material-ui/Divider'
 import Checkbox from 'material-ui/Checkbox'
+import ServiceStatusDialog from '../Components/ServiceStatusDialog'
 
 var date = new Date();
 var dateString = date.toString().split(' ', 4).join(' ');
@@ -29,7 +31,7 @@ var serviceStatus = 'red';
 })
 
 
-export default class ServiceSchedule extends React.Component {
+export default class ServiceCard extends React.Component {
 
 constructor(props) {
 	super(props);
@@ -74,7 +76,8 @@ componentWillUpdate(nextProps, nextState){
 serviceStatus(event, isInputChecked) {
 	console.log('serviceStatus');
 	console.log(event.target.name);
-	alert('are you sure');
+	// alert('are you sure');
+
 	// console.log(isInputChecked);
 	axios.post('/serviceStatus',
 		{ 
@@ -82,6 +85,7 @@ serviceStatus(event, isInputChecked) {
 			completed: 1
 		}).then(function(response){
 			console.log('updated service status');
+			location.reload();
 		});
 }
 
@@ -90,7 +94,7 @@ card(fieldInfo, index) {
 		 <Card key={index} style={{display: this.state.cardDisplay}}>
 		    <CardHeader
 		      title= {fieldInfo.time} 
-		      avatar={<ActionBuild style={{color: fieldInfo.completed ? 'green' : 'red'}} />}
+		      avatar={<ActionBuild name={fieldInfo.email} style={{color: fieldInfo.completed ? 'green' : 'red'}} />}
 		      subtitle={fieldInfo.given_name + ' ' + fieldInfo.family_name + ' ' + fieldInfo.service_request}
 		      actAsExpander={true}
 		      showExpandableButton={true}
@@ -102,12 +106,16 @@ card(fieldInfo, index) {
 		    </CardActions>*/}
 		    <CardText expandable={true}>
 		    	<List>
-			      <ListItem primaryText={fieldInfo.email} leftIcon={<ContactEmail />} />
-			      <ListItem primaryText={fieldInfo.phone_number} leftIcon={<ContactPhone />} />
-			      <ListItem primaryText={fieldInfo.vehicle_year + ' ' + fieldInfo.vehicle_make + ' ' + fieldInfo.vehicle_model} leftIcon={<Vehicle />} />
-			      <ListItem primaryText={fieldInfo.scheduled_by} leftIcon={<Employee />} />
-			      <ListItem primaryText="Service Completed" leftCheckbox={<Checkbox name={fieldInfo.email} onCheck={this.serviceStatus} />} />
+			      <ListItem primaryText={fieldInfo.email} leftIcon={<ContactEmail color={'blue'} />} />
+			      <ListItem primaryText={fieldInfo.phone_number} leftIcon={<ContactPhone color={'green'} />} />
+			      <ListItem primaryText={fieldInfo.vehicle_year + ' ' + fieldInfo.vehicle_make + ' ' + fieldInfo.vehicle_model} leftIcon={<Vehicle color={'red'} />} />
+			      <ListItem primaryText={'Scheduled by ' + fieldInfo.scheduled_by} leftIcon={<Employee color={'yellow'}/>} />
+			      <ListItem primaryText='Checked in by' leftCheckbox={<Checkbox name={fieldInfo.email} />}/>
+			      <ListItem primaryText='Moved in service bay by' leftCheckbox={<Checkbox name={fieldInfo.email} />}/>
+			      <ListItem primaryText={<ServiceStatusDialog name={fieldInfo.email} status={fieldInfo.completed} />}/>
+			      <ListItem primaryText='Customer has been contacted by ' leftCheckbox={<Checkbox name={fieldInfo.email} />}/>
 			    </List>
+			
 			    <Divider />
 		      {/*<Table>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
