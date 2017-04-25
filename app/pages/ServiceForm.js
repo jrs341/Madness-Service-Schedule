@@ -14,7 +14,10 @@ import LocationDropDown from '../Components/LocationDropDown'
 import EmployeeDropDown from '../Components/EmployeeDropDown'
 import Calendar from 'material-ui/DatePicker/Calendar'
 import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
-import ServiceCard from '../Components/ServiceCard'
+// import ServiceCard from '../Components/ServiceCard'
+import ServiceTable from '../Components/ServiceTable'
+
+var date = new Date();
 
 @connect((store) => {
 	return {
@@ -37,7 +40,8 @@ export default class ServiceForm extends React.Component {
 			vehicle_make: '',
 			vehicle_model: '',
 			vehicle_year: '',
-			service_request: '' 
+			service_request: '',
+			controlledDate: date 
 		};
 
 		this.updateFormInfo = this.updateFormInfo.bind(this);
@@ -126,44 +130,120 @@ export default class ServiceForm extends React.Component {
     	this.props.dispatch(changeServiceDateState(date));
     	// console.log(date);
   	}
-    // calendarStyle={{width: 250}}
-// md={8} offset={{ md: 2 }}
+
   render() {
     return (
     	<div>
 	    	<Row>
 	    		<h1> Madness Autoworks Service Schedule for <LocationDropDown /></h1>
 	    	</Row>
-	    	{/*<DatePicker 
-	    	hideCalendarDate={true}
-	    	container={'inline'}
-	    	/>*/}
 	    	<Row>
-	    	<Col md={3}>
-	    	{/*<div style={{width: 310, display: 'inline-block'}}>*/}
-	    		<Calendar
+	    	<Col md={4}>
+    			<Calendar
+	    			value={this.state.controlledDate}
 	    			disableYearSelection={true}
-		    		// shouldDisableDate={this.disableWeekends}
+		    		shouldDisableDate={this.disableWeekends}
 		    		hideCalendarDate= 'true'
 		    		dialogContainerStyle={{width: 350}}
 		            firstDayOfWeek={1}	
 		            onTouchTapDay={this.serviceDateState}
-		        />
-		        <Link to='/serviceForm'>
-		        	<RaisedButton
-		        	  label="Schedule Service"
-	                  primary={true}
-	                /> 
-	            </Link>	
-	    	{/*</div>*/}
-	    	</Col>
-	    	<Col md={5} offset={{ md: 2 }}>
-	    	{/*<div style={{display: 'inline-block'}}>*/}
-	            <ServiceCard />
-    		{/*</div>*/}
+	        	/>
+	    	{/*</Col>
+	    	<Col md={4} >*/}
+	            <TextField
+					style={{display: 'inline-block', width: '50%'}}
+	                id='given_name'
+	                value={this.state.given_name}
+	                type='text'
+	                hintText='First Name'
+	                floatingLabelText='First Name'
+	                onChange={this.updateFormInfo}
+	            />
+	            <TextField
+	            	style={{display:'inline-block', width: '50%'}}
+	                id='family_name'
+	                value={this.state.family_name}
+	                type='text'
+	                hintText='Last Name'
+	                floatingLabelText='Last Name'
+	               	onChange={this.updateFormInfo}
+	            />
+	            <TextField
+	            	style={{display: 'inline-block', width: '50%'}}
+	                id='email'
+	                value={this.state.email}
+	                type='text'
+	                hintText='Email'
+	                floatingLabelText='Email'
+	               	onChange={this.updateFormInfo}
+	            />
+	            <TextField
+	            	style={{display: 'inline-block', width: '50%'}}
+	                id='phone_number'
+	                value={this.state.phone_number}
+	                type='text'
+	                hintText='Phone Number'
+	                floatingLabelText='Phone Number'
+	               	onChange={this.updateFormInfo}
+	            />
+	            <TextField
+	            	style={{display: 'inline-block', width: '33%'}}
+	                id='vehicle_year'
+	                vehicle={this.state.vehicle_year}
+	                type='text'
+	                hintText='Vehicle Year'
+	                floatingLabelText='Vehicle Year'
+	               	onChange={this.updateFormInfo}
+	            />
+	            <TextField
+	            	style={{display: 'inline-block', width: '33%'}}
+	                id='vehicle_make'
+	                value={this.state.vehicle_make}
+	                type='text'
+	                hintText='Vehicle Make'
+	                floatingLabelText='Vehicle Make'
+	               	onChange={this.updateFormInfo}
+	            />
+	            <TextField
+	            	style={{display: 'inline-block', width: '33%'}}
+	                id='vehicle_model'
+	                value={this.state.vehicle_model}
+	                type='text'
+	                hintText='Vehicle Model'
+	                floatingLabelText='Vehicle Model'
+	               	onChange={this.updateFormInfo}
+	            />
+	            
+	            <TextField
+	            	style={{display: 'block'}}
+	                id='service_request'
+	                value={this.state.service_request}
+	                type='text'
+	                hintText='Requested Service'
+	                floatingLabelText='Requested Service'
+	                multiLine={true}
+	                rows={3}
+	                rowsMax={5}
+	               	onChange={this.updateFormInfo}
+	            />
+	            <RaisedButton
+	                label="Submit"
+	                primary={true}
+	                onClick={this.checkCustomerDB}
+	            /> 
+	            {/*<Link to='serviceSchedule'>
+	              <RaisedButton
+	                label="Service Schedule"
+	                primary={true}
+	              /> 
+	            </Link>*/}
+			</Col>
+	    	<Col md={8}>
+	            <ServiceTable />
     		</Col>
     		</Row>
-				{/*<Card>
+    			{/*<ServiceTable />
+				<Card>
 					<CardTitle
 						title='Schedule Service'>
 						<LocationDropDown />

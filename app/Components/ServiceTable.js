@@ -19,6 +19,7 @@ import Checkbox from 'material-ui/Checkbox'
 var date = new Date();
 var dateString = date.toString().split(' ', 4).join(' ');
 var serviceStatus = 'red';
+const times =['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
 
 @connect((store) => {
 	return {
@@ -30,7 +31,7 @@ var serviceStatus = 'red';
 })
 
 
-export default class ServiceSchedule extends React.Component {
+export default class ServiceTable extends React.Component {
 
 constructor(props) {
 	super(props);
@@ -52,10 +53,9 @@ constructor(props) {
 
 	this.scheduleForToday = this.scheduleForToday.bind(this);
 	this.getSchedule = this.getSchedule.bind(this);
-	// this.card = this.card.bind(this);
+	this.tableRow = this.tableRow.bind(this);
 	this.updateScheduleInfo = this.updateScheduleInfo.bind(this);
 	this.serviceStatus = this.serviceStatus.bind(this);
-	this.tableRow = this.tableRow.bind(this);
 }
 
 componentWillMount() {
@@ -73,6 +73,32 @@ componentWillUpdate(nextProps, nextState){
 	}
 }
 
+tableRow(fieldInfo, index) {
+     
+ 	for(var i=0; i<times.length; i++){
+ 		// if (fieldInfo.time == times[index]) {
+ 		// 	return (
+ 		// 		<TableRow>
+			//        	<TableRowColumn>{times[index]}</TableRowColumn>
+			//          <TableRowColumn>{fieldInfo.given_name + ' ' + fieldInfo.family_name}</TableRowColumn>
+			//          <TableRowColumn>{fieldInfo.vehicle_model}</TableRowColumn>
+			//          <TableRowColumn>{fieldInfo.requested_service}</TableRowColumn>
+			//     </TableRow>
+ 		// 	);
+ 		// }
+ 		// else {
+ 			return (
+ 				<TableRow>
+ 					<TableRowColumn>{times[index]}</TableRowColumn>
+ 					<TableRowColumn>{' '}</TableRowColumn>
+			        <TableRowColumn>{' '}</TableRowColumn>
+			        <TableRowColumn>{' '}</TableRowColumn>
+ 				</TableRow>
+ 			);
+ 		// }
+ 	}  
+ }
+
 serviceStatus(event, isInputChecked) {
 	console.log('serviceStatus');
 	console.log(event.target.name);
@@ -87,73 +113,7 @@ serviceStatus(event, isInputChecked) {
 		});
 }
 
-tableRow(fieldInfo) {
-     return (
-       <TableRow>
-       	<TableRowColumn>{fieldInfo.time}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.given_name}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.family_name}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.email}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.phone_number}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.vehicle_year}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.vehicle_make}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.vehicle_model}</TableRowColumn>
-         <TableRowColumn>{fieldInfo.requested_service}</TableRowColumn>
-       </TableRow>
-    );
- }
 
-// card(fieldInfo, index) {      	
-// 	return (
-// 		 // <Card key={index} style={{display: this.state.cardDisplay}}>
-// 		 //    <CardHeader
-// 		 //      title= {fieldInfo.time} 
-// 		 //      avatar={<ActionBuild style={{color: fieldInfo.completed ? 'green' : 'red'}} />}
-// 		 //      subtitle={fieldInfo.given_name + ' ' + fieldInfo.family_name + ' ' + fieldInfo.service_request}
-// 		 //      actAsExpander={true}
-// 		 //      showExpandableButton={true}
-// 		 //    />
-// 		 //    <CardActions>
-// 		 //      <RaisedButton id={fieldInfo.email} label="Service Complete" onTouchTap={this.serviceStatus(fieldInfo.email)} />
-// 		 //      <RaisedButton label="Reschedule" />
-// 		 //      <RaisedButton label="Cancel" />
-// 		 //    </CardActions>
-// 		 //    <CardText expandable={true}>
-// 		 //    	<List>
-// 			//       <ListItem primaryText={fieldInfo.email} leftIcon={<ContactEmail />} />
-// 			//       <ListItem primaryText={fieldInfo.phone_number} leftIcon={<ContactPhone />} />
-// 			//       <ListItem primaryText={fieldInfo.vehicle_year + ' ' + fieldInfo.vehicle_make + ' ' + fieldInfo.vehicle_model} leftIcon={<Vehicle />} />
-// 			//       <ListItem primaryText={fieldInfo.scheduled_by} leftIcon={<Employee />} />
-// 			//       <ListItem primaryText="Service Completed" leftCheckbox={<Checkbox name={fieldInfo.email} onCheck={this.serviceStatus} />} />
-// 			//     </List>
-// 			// <Divider />
-// 		      <Table>
-//               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-//                 <TableRow>
-//                   <TableHeaderColumn>Email</TableHeaderColumn>
-//                   <TableHeaderColumn>Phone</TableHeaderColumn>
-//                   <TableHeaderColumn>Year</TableHeaderColumn>
-//                   <TableHeaderColumn>Make</TableHeaderColumn>
-//                   <TableHeaderColumn>Model</TableHeaderColumn>
-//                   <TableHeaderColumn>Scheduled By</TableHeaderColumn>
-//                 </TableRow>
-//               </TableHeader>
-//               <TableBody displayRowCheckbox={false} stripedRows={true}>
-//               {this.state.scheduleInfo[index].map((fieldInfo, index) => this.tableRow(fieldInfo, index))}
-//               	<TableRow>
-// 			        <TableRowColumn>{fieldInfo.email}</TableRowColumn>
-// 			        <TableRowColumn>{fieldInfo.phone_number}</TableRowColumn>
-// 			        <TableRowColumn>{fieldInfo.vehicle_year}</TableRowColumn>
-// 			        <TableRowColumn>{fieldInfo.vehicle_make}</TableRowColumn>
-// 			        <TableRowColumn>{fieldInfo.vehicle_model}</TableRowColumn>
-// 			        <TableRowColumn>{fieldInfo.scheduled_by}</TableRowColumn>
-// 			    </TableRow>
-//               </TableBody>
-//             </Table>
-// 		    // </CardText>
-// 		  // </Card>
-// 	);
-// }
 
 updateScheduleInfo(getRequestResponse) {
     this.setState({scheduleInfo: getRequestResponse});
@@ -197,35 +157,29 @@ getSchedule = (date, location) => {
     	}
     });
 }
-// <div>
-    		// <h1> Madness AutoWorks Service Schedule for 
-    			// <DatePicker />  
-    			// <LocationDropDown /> 
-    		// </h1>
-    		// {this.state.scheduleStatus}
-    		// {this.state.scheduleInfo.map((fieldInfo, index) => this.card(fieldInfo, index))}
-    	// </div>
+
   render() {
     return (
-    	
     	<Table>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                  <TableRow>
                    <TableHeaderColumn>Time</TableHeaderColumn>
-                   <TableHeaderColumn>First Name</TableHeaderColumn>
-                   <TableHeaderColumn>Last Name</TableHeaderColumn>
+                   <TableHeaderColumn>Name</TableHeaderColumn>
+                   {/*<TableHeaderColumn>Last Name</TableHeaderColumn>
                    <TableHeaderColumn>Email</TableHeaderColumn>
                    <TableHeaderColumn>Phone</TableHeaderColumn>
                    <TableHeaderColumn>Year</TableHeaderColumn>
-                   <TableHeaderColumn>Make</TableHeaderColumn>
+                   <TableHeaderColumn>Make</TableHeaderColumn>*/}
                    <TableHeaderColumn>Model</TableHeaderColumn>
                    <TableHeaderColumn>Service</TableHeaderColumn>
                  </TableRow>
                </TableHeader>
                <TableBody displayRowCheckbox={false} stripedRows={true}>
-               {this.state.scheduleInfo.map((fieldInfo, index) => this.tableRow(fieldInfo, index))}
+               {times.map((fieldInfo, index) => this.tableRow(fieldInfo, index))}
                </TableBody>
-             </Table>
+        </Table>	
     );
   }
 }
+
+// this.state.scheduleInfo

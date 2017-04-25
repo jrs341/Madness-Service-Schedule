@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import { Link } from 'react-router'
 import { Card, CardTitle, CardHeader, CardText, CardActions } from 'material-ui/Card'
 import {List, ListItem} from 'material-ui/List'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import axios from 'axios'
 import LocationDropDown from '../Components/LocationDropDown'
 import DatePicker from '../Components/DatePicker'
@@ -56,6 +57,7 @@ constructor(props) {
 	this.card = this.card.bind(this);
 	this.updateScheduleInfo = this.updateScheduleInfo.bind(this);
 	this.serviceStatus = this.serviceStatus.bind(this);
+	this.tableRow = this.tableRow.bind(this);
 }
 
 componentWillMount() {
@@ -89,6 +91,17 @@ serviceStatus(event, isInputChecked) {
 		});
 }
 
+tableRow(fieldInfo, index) {
+	<TableRow>
+        <TableRowColumn>{fieldInfo.email}</TableRowColumn>
+        <TableRowColumn>{fieldInfo.phone_number}</TableRowColumn>
+        <TableRowColumn>{fieldInfo.vehicle_year}</TableRowColumn>
+        <TableRowColumn>{fieldInfo.vehicle_make}</TableRowColumn>
+        <TableRowColumn>{fieldInfo.vehicle_model}</TableRowColumn>
+        <TableRowColumn>{fieldInfo.scheduled_by}</TableRowColumn>
+    </TableRow>
+}
+
 card(fieldInfo, index) {      	
 	return (
 		 <Card key={index} style={{display: this.state.cardDisplay}}>
@@ -117,6 +130,7 @@ card(fieldInfo, index) {
 			    </List>
 			
 			    <Divider />
+			  </CardText>
 		      {/*<Table>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
@@ -129,18 +143,11 @@ card(fieldInfo, index) {
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false} stripedRows={true}>
-              {/*{{this.state.scheduleInfo[index].map((fieldInfo, index) => this.tableRow(fieldInfo, index))}
-              	<TableRow>
-			        <TableRowColumn>{fieldInfo.email}</TableRowColumn>
-			        <TableRowColumn>{fieldInfo.phone_number}</TableRowColumn>
-			        <TableRowColumn>{fieldInfo.vehicle_year}</TableRowColumn>
-			        <TableRowColumn>{fieldInfo.vehicle_make}</TableRowColumn>
-			        <TableRowColumn>{fieldInfo.vehicle_model}</TableRowColumn>
-			        <TableRowColumn>{fieldInfo.scheduled_by}</TableRowColumn>
-			    </TableRow>
+              {this.state.scheduleInfo[index].map((fieldInfo, index) => this.tableRow(fieldInfo, index))}
+              	
               </TableBody>
-            </Table>*/}
-		    </CardText>
+            </Table>
+		    </CardText>*/}
 		  </Card>
 	);
 }
