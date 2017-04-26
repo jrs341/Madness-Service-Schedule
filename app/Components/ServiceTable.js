@@ -19,7 +19,7 @@ import Checkbox from 'material-ui/Checkbox'
 var date = new Date();
 var dateString = date.toString().split(' ', 4).join(' ');
 var serviceStatus = 'red';
-const times =['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
+// const times =['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
 
 @connect((store) => {
 	return {
@@ -35,8 +35,12 @@ export default class ServiceTable extends React.Component {
 
 constructor(props) {
 	super(props);
+
+	// this.times = [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}],
+
 	this.state = {
 		scheduleInfo: [],
+		times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}],
 		cardDisplay: 'none',
 		scheduleStatus: '',
 		serviceStatus: 'red'
@@ -58,12 +62,18 @@ constructor(props) {
 	this.serviceStatus = this.serviceStatus.bind(this);
 }
 
-componentWillMount() {
+// componentWillMount() {
+// 	this.scheduleForToday();
+// }
+
+componentDidMount() {
 	this.scheduleForToday();
 }
+
 // without the if else statement an infinate loop is created
 componentWillUpdate(nextProps, nextState){
-	// console.log('will update');
+	console.log('will update');
+	// console.log(nextState);
 	if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location){
 		this.setState({cardDisplay: 'none'});
 		this.getSchedule(nextProps.serviceDate, nextProps.location);
@@ -73,35 +83,40 @@ componentWillUpdate(nextProps, nextState){
 	}
 }
 
-tableRow(fieldInfo, index) {
-     
- 	for(var i=0; i<times.length; i++){
- 		// if (fieldInfo.time == times[index]) {
- 		// 	return (
- 		// 		<TableRow>
-			//        	<TableRowColumn>{times[index]}</TableRowColumn>
-			//          <TableRowColumn>{fieldInfo.given_name + ' ' + fieldInfo.family_name}</TableRowColumn>
-			//          <TableRowColumn>{fieldInfo.vehicle_model}</TableRowColumn>
-			//          <TableRowColumn>{fieldInfo.requested_service}</TableRowColumn>
-			//     </TableRow>
- 		// 	);
- 		// }
- 		// else {
- 			return (
- 				<TableRow>
- 					<TableRowColumn>{times[index]}</TableRowColumn>
- 					<TableRowColumn>{' '}</TableRowColumn>
-			        <TableRowColumn>{' '}</TableRowColumn>
-			        <TableRowColumn>{' '}</TableRowColumn>
- 				</TableRow>
- 			);
- 		// }
- 	}  
- }
+componentDidUpdate(prevProps, prevState) {
+	console.log('did update');
+	// console.log(prevState);
+	
+}
+
+tableRow(times, i) {
+	// console.log(this.state.times[0].time);
+	if (this.state.times[i].booked){
+		console.log('booked');
+		return (
+			<TableRow>
+	       	 <TableRowColumn >{this.state.times[i].time}</TableRowColumn>
+	         <TableRowColumn>{this.state.times[i].given_name + ' ' + this.state.times[i].family_name}</TableRowColumn>
+	         <TableRowColumn>{this.state.times[i].vehicle_model}</TableRowColumn>
+	         <TableRowColumn>{this.state.times[i].requested_service}</TableRowColumn>
+	    </TableRow>
+		);
+		} else {
+		return (
+			<TableRow>
+				<TableRowColumn>{this.state.times[i].time}</TableRowColumn>
+				<TableRowColumn>{' '}</TableRowColumn>
+		        <TableRowColumn>{' '}</TableRowColumn>
+		        <TableRowColumn>{' '}</TableRowColumn>
+			</TableRow>
+		);
+	}  
+}
+ 	
 
 serviceStatus(event, isInputChecked) {
 	console.log('serviceStatus');
-	console.log(event.target.name);
+	// console.log(event.target.name);
 	alert('are you sure');
 	// console.log(isInputChecked);
 	axios.post('/serviceStatus',
@@ -115,8 +130,17 @@ serviceStatus(event, isInputChecked) {
 
 
 
-updateScheduleInfo(getRequestResponse) {
-    this.setState({scheduleInfo: getRequestResponse});
+updateScheduleInfo() {
+	console.log('updateScheduleInfo');
+    // this.setState({scheduleInfo: getRequestResponse});
+    for (var i=0; i<this.state.times.length; i++){
+    	for(var j=0; j<this.state.scheduleInfo.length; j++){
+    		if (this.state.times[i].time == this.state.scheduleInfo[j].time){
+    			this.state.times.splice(i, 1, this.state.scheduleInfo[j]);
+    			// console.log(this.state.times);
+    		}
+    	}
+    }
 }
 
 // default schedule when component mounts default to today and austin
@@ -126,14 +150,19 @@ scheduleForToday = () => {
       url: '/scheduleForToday/' + dateString + '/' + this.props.location
     }).then((response)=> {
     	if(response.data == '') {
+    		this.setState({scheduleInfo: []});
+    		this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
     		console.log('nothing scheduled for today');
     		this.setState({scheduleStatus: 'There are no reservations for today at this location'});	
     	}
     	else {
+    		this.setState({scheduleInfo: response.data});
+    		this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
+    		this.updateScheduleInfo();
     		this.setState({cardDisplay: 'block'});
     		this.setState({scheduleStatus: ''});
-    		console.log('today s schedule');
-    		this.updateScheduleInfo(response.data);
+    		console.log('today s schedule from scheduleForToday');
+    		// this.updateScheduleInfo(response.data);
     	}
     });
 }
@@ -146,14 +175,19 @@ getSchedule = (date, location) => {
     }).then((response)=> {
     	// console.log(response.data);
     	if(response.data == '') {
+    		this.setState({scheduleInfo: []});
+    		this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
     		console.log('nothing scheduled for today');
     		this.setState({scheduleStatus: 'There are no reservations for today at this location'});	
     	}
     	else {
+    		this.setState({scheduleInfo: response.data});
+    		this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
+    		this.updateScheduleInfo();
     		this.setState({cardDisplay: 'block'});
     		this.setState({scheduleStatus: ''});
-    		console.log('today s schedule');
-    		this.updateScheduleInfo(response.data);	
+    		console.log('today s schedule getSchedule');
+    		// this.updateScheduleInfo(response.data);	
     	}
     });
 }
@@ -175,11 +209,9 @@ getSchedule = (date, location) => {
                  </TableRow>
                </TableHeader>
                <TableBody displayRowCheckbox={false} stripedRows={true}>
-               {times.map((fieldInfo, index) => this.tableRow(fieldInfo, index))}
+               {this.state.times.map((times, i) => this.tableRow(times, i))}
                </TableBody>
         </Table>	
     );
   }
 }
-
-// this.state.scheduleInfo

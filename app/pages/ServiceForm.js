@@ -120,7 +120,7 @@ export default class ServiceForm extends React.Component {
     }
 
     disableWeekends = (date) => {
-    return date.getDay() === 0 || date.getDay() === 6;
+    	return date.getDay() === 0 || date.getDay() === 6;
   	}
 
   	serviceDateState = (event, date) => {

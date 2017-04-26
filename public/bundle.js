@@ -79538,7 +79538,7 @@ exports.default = _Table3.default;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 exports.default = undefined;
 
@@ -79615,216 +79615,261 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var date = new Date();
 var dateString = date.toString().split(' ', 4).join(' ');
 var serviceStatus = 'red';
-var times = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
+// const times =['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
 
 var ServiceTable = (_dec = (0, _reactRedux.connect)(function (store) {
-  return {
-    location: store.locationState.location,
-    serviceDate: store.serviceDateState.serviceDate,
-    serviceTime: store.serviceTimeState.serviceTime,
-    scheduledBy: store.scheduledByState.scheduledBy
-  };
+	return {
+		location: store.locationState.location,
+		serviceDate: store.serviceDateState.serviceDate,
+		serviceTime: store.serviceTimeState.serviceTime,
+		scheduledBy: store.scheduledByState.scheduledBy
+	};
 }), _dec(_class = function (_React$Component) {
-  _inherits(ServiceTable, _React$Component);
+	_inherits(ServiceTable, _React$Component);
 
-  function ServiceTable(props) {
-    _classCallCheck(this, ServiceTable);
+	function ServiceTable(props) {
+		_classCallCheck(this, ServiceTable);
 
-    var _this = _possibleConstructorReturn(this, (ServiceTable.__proto__ || Object.getPrototypeOf(ServiceTable)).call(this, props));
+		// this.times = [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}],
 
-    _this.scheduleForToday = function () {
-      (0, _axios2.default)({
-        type: 'GET',
-        url: '/scheduleForToday/' + dateString + '/' + _this.props.location
-      }).then(function (response) {
-        if (response.data == '') {
-          console.log('nothing scheduled for today');
-          _this.setState({ scheduleStatus: 'There are no reservations for today at this location' });
-        } else {
-          _this.setState({ cardDisplay: 'block' });
-          _this.setState({ scheduleStatus: '' });
-          console.log('today s schedule');
-          _this.updateScheduleInfo(response.data);
-        }
-      });
-    };
+		var _this = _possibleConstructorReturn(this, (ServiceTable.__proto__ || Object.getPrototypeOf(ServiceTable)).call(this, props));
 
-    _this.getSchedule = function (date, location) {
+		_this.scheduleForToday = function () {
+			(0, _axios2.default)({
+				type: 'GET',
+				url: '/scheduleForToday/' + dateString + '/' + _this.props.location
+			}).then(function (response) {
+				if (response.data == '') {
+					_this.setState({ scheduleInfo: [] });
+					_this.setState({ times: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }] });
+					console.log('nothing scheduled for today');
+					_this.setState({ scheduleStatus: 'There are no reservations for today at this location' });
+				} else {
+					_this.setState({ scheduleInfo: response.data });
+					_this.setState({ times: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }] });
+					_this.updateScheduleInfo();
+					_this.setState({ cardDisplay: 'block' });
+					_this.setState({ scheduleStatus: '' });
+					console.log('today s schedule from scheduleForToday');
+					// this.updateScheduleInfo(response.data);
+				}
+			});
+		};
 
-      (0, _axios2.default)({
-        type: 'GET',
-        url: '/getSchedule/' + date + '/' + location
-      }).then(function (response) {
-        // console.log(response.data);
-        if (response.data == '') {
-          console.log('nothing scheduled for today');
-          _this.setState({ scheduleStatus: 'There are no reservations for today at this location' });
-        } else {
-          _this.setState({ cardDisplay: 'block' });
-          _this.setState({ scheduleStatus: '' });
-          console.log('today s schedule');
-          _this.updateScheduleInfo(response.data);
-        }
-      });
-    };
+		_this.getSchedule = function (date, location) {
 
-    _this.state = {
-      scheduleInfo: [],
-      cardDisplay: 'none',
-      scheduleStatus: '',
-      serviceStatus: 'red'
-      // given_name: '',
-      // family_name: '',
-      // phone_number: '',
-      // email: '',
-      // vehicle_make: '',
-      // vehicle_model: '',
-      // vehicle_year: '',
-      // requested_service: '',
-      // scheduled_by: '' 
-    };
+			(0, _axios2.default)({
+				type: 'GET',
+				url: '/getSchedule/' + date + '/' + location
+			}).then(function (response) {
+				// console.log(response.data);
+				if (response.data == '') {
+					_this.setState({ scheduleInfo: [] });
+					_this.setState({ times: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }] });
+					console.log('nothing scheduled for today');
+					_this.setState({ scheduleStatus: 'There are no reservations for today at this location' });
+				} else {
+					_this.setState({ scheduleInfo: response.data });
+					_this.setState({ times: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }] });
+					_this.updateScheduleInfo();
+					_this.setState({ cardDisplay: 'block' });
+					_this.setState({ scheduleStatus: '' });
+					console.log('today s schedule getSchedule');
+					// this.updateScheduleInfo(response.data);	
+				}
+			});
+		};
 
-    _this.scheduleForToday = _this.scheduleForToday.bind(_this);
-    _this.getSchedule = _this.getSchedule.bind(_this);
-    _this.tableRow = _this.tableRow.bind(_this);
-    _this.updateScheduleInfo = _this.updateScheduleInfo.bind(_this);
-    _this.serviceStatus = _this.serviceStatus.bind(_this);
-    return _this;
-  }
+		_this.state = {
+			scheduleInfo: [],
+			times: [{ time: '9:00' }, { time: '9:30' }, { time: '10:00' }, { time: '10:30' }, { time: '11:00' }, { time: '11:30' }, { time: '12:00' }, { time: '12:30' }, { time: '1:00' }, { time: '1:30' }, { time: '2:00' }, { time: '2:30' }, { time: '3:00' }, { time: '3:30' }, { time: '4:00' }, { time: '4:30' }],
+			cardDisplay: 'none',
+			scheduleStatus: '',
+			serviceStatus: 'red'
+			// given_name: '',
+			// family_name: '',
+			// phone_number: '',
+			// email: '',
+			// vehicle_make: '',
+			// vehicle_model: '',
+			// vehicle_year: '',
+			// requested_service: '',
+			// scheduled_by: '' 
+		};
 
-  _createClass(ServiceTable, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      this.scheduleForToday();
-    }
-    // without the if else statement an infinate loop is created
+		_this.scheduleForToday = _this.scheduleForToday.bind(_this);
+		_this.getSchedule = _this.getSchedule.bind(_this);
+		_this.tableRow = _this.tableRow.bind(_this);
+		_this.updateScheduleInfo = _this.updateScheduleInfo.bind(_this);
+		_this.serviceStatus = _this.serviceStatus.bind(_this);
+		return _this;
+	}
 
-  }, {
-    key: 'componentWillUpdate',
-    value: function componentWillUpdate(nextProps, nextState) {
-      // console.log('will update');
-      if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location) {
-        this.setState({ cardDisplay: 'none' });
-        this.getSchedule(nextProps.serviceDate, nextProps.location);
-      } else {}
-    }
-  }, {
-    key: 'tableRow',
-    value: function tableRow(fieldInfo, index) {
+	// componentWillMount() {
+	// 	this.scheduleForToday();
+	// }
 
-      for (var i = 0; i < times.length; i++) {
-        // if (fieldInfo.time == times[index]) {
-        // 	return (
-        // 		<TableRow>
-        //        	<TableRowColumn>{times[index]}</TableRowColumn>
-        //          <TableRowColumn>{fieldInfo.given_name + ' ' + fieldInfo.family_name}</TableRowColumn>
-        //          <TableRowColumn>{fieldInfo.vehicle_model}</TableRowColumn>
-        //          <TableRowColumn>{fieldInfo.requested_service}</TableRowColumn>
-        //     </TableRow>
-        // 	);
-        // }
-        // else {
-        return _react2.default.createElement(
-          _Table.TableRow,
-          null,
-          _react2.default.createElement(
-            _Table.TableRowColumn,
-            null,
-            times[index]
-          ),
-          _react2.default.createElement(
-            _Table.TableRowColumn,
-            null,
-            ' '
-          ),
-          _react2.default.createElement(
-            _Table.TableRowColumn,
-            null,
-            ' '
-          ),
-          _react2.default.createElement(
-            _Table.TableRowColumn,
-            null,
-            ' '
-          )
-        );
-        // }
-      }
-    }
-  }, {
-    key: 'serviceStatus',
-    value: function serviceStatus(event, isInputChecked) {
-      console.log('serviceStatus');
-      console.log(event.target.name);
-      alert('are you sure');
-      // console.log(isInputChecked);
-      _axios2.default.post('/serviceStatus', {
-        email: event.target.name,
-        completed: 1
-      }).then(function (response) {
-        console.log('updated service status');
-      });
-    }
-  }, {
-    key: 'updateScheduleInfo',
-    value: function updateScheduleInfo(getRequestResponse) {
-      this.setState({ scheduleInfo: getRequestResponse });
-    }
+	_createClass(ServiceTable, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.scheduleForToday();
+		}
 
-    // default schedule when component mounts default to today and austin
+		// without the if else statement an infinate loop is created
 
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
+	}, {
+		key: 'componentWillUpdate',
+		value: function componentWillUpdate(nextProps, nextState) {
+			console.log('will update');
+			// console.log(nextState);
+			if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location) {
+				this.setState({ cardDisplay: 'none' });
+				this.getSchedule(nextProps.serviceDate, nextProps.location);
+			} else {}
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate(prevProps, prevState) {
+			console.log('did update');
+			// console.log(prevState);
+		}
+	}, {
+		key: 'tableRow',
+		value: function tableRow(times, i) {
+			// console.log(this.state.times[0].time);
+			if (this.state.times[i].booked) {
+				console.log('booked');
+				return _react2.default.createElement(
+					_Table.TableRow,
+					null,
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						this.state.times[i].time
+					),
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						this.state.times[i].given_name + ' ' + this.state.times[i].family_name
+					),
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						this.state.times[i].vehicle_model
+					),
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						this.state.times[i].requested_service
+					)
+				);
+			} else {
+				return _react2.default.createElement(
+					_Table.TableRow,
+					null,
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						this.state.times[i].time
+					),
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						' '
+					),
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						' '
+					),
+					_react2.default.createElement(
+						_Table.TableRowColumn,
+						null,
+						' '
+					)
+				);
+			}
+		}
+	}, {
+		key: 'serviceStatus',
+		value: function serviceStatus(event, isInputChecked) {
+			console.log('serviceStatus');
+			// console.log(event.target.name);
+			alert('are you sure');
+			// console.log(isInputChecked);
+			_axios2.default.post('/serviceStatus', {
+				email: event.target.name,
+				completed: 1
+			}).then(function (response) {
+				console.log('updated service status');
+			});
+		}
+	}, {
+		key: 'updateScheduleInfo',
+		value: function updateScheduleInfo() {
+			console.log('updateScheduleInfo');
+			// this.setState({scheduleInfo: getRequestResponse});
+			for (var i = 0; i < this.state.times.length; i++) {
+				for (var j = 0; j < this.state.scheduleInfo.length; j++) {
+					if (this.state.times[i].time == this.state.scheduleInfo[j].time) {
+						this.state.times.splice(i, 1, this.state.scheduleInfo[j]);
+						// console.log(this.state.times);
+					}
+				}
+			}
+		}
 
-      return _react2.default.createElement(
-        _Table.Table,
-        null,
-        _react2.default.createElement(
-          _Table.TableHeader,
-          { displaySelectAll: false, adjustForCheckbox: false },
-          _react2.default.createElement(
-            _Table.TableRow,
-            null,
-            _react2.default.createElement(
-              _Table.TableHeaderColumn,
-              null,
-              'Time'
-            ),
-            _react2.default.createElement(
-              _Table.TableHeaderColumn,
-              null,
-              'Name'
-            ),
-            _react2.default.createElement(
-              _Table.TableHeaderColumn,
-              null,
-              'Model'
-            ),
-            _react2.default.createElement(
-              _Table.TableHeaderColumn,
-              null,
-              'Service'
-            )
-          )
-        ),
-        _react2.default.createElement(
-          _Table.TableBody,
-          { displayRowCheckbox: false, stripedRows: true },
-          times.map(function (fieldInfo, index) {
-            return _this2.tableRow(fieldInfo, index);
-          })
-        )
-      );
-    }
-  }]);
+		// default schedule when component mounts default to today and austin
 
-  return ServiceTable;
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this2 = this;
+
+			return _react2.default.createElement(
+				_Table.Table,
+				null,
+				_react2.default.createElement(
+					_Table.TableHeader,
+					{ displaySelectAll: false, adjustForCheckbox: false },
+					_react2.default.createElement(
+						_Table.TableRow,
+						null,
+						_react2.default.createElement(
+							_Table.TableHeaderColumn,
+							null,
+							'Time'
+						),
+						_react2.default.createElement(
+							_Table.TableHeaderColumn,
+							null,
+							'Name'
+						),
+						_react2.default.createElement(
+							_Table.TableHeaderColumn,
+							null,
+							'Model'
+						),
+						_react2.default.createElement(
+							_Table.TableHeaderColumn,
+							null,
+							'Service'
+						)
+					)
+				),
+				_react2.default.createElement(
+					_Table.TableBody,
+					{ displayRowCheckbox: false, stripedRows: true },
+					this.state.times.map(function (times, i) {
+						return _this2.tableRow(times, i);
+					})
+				)
+			);
+		}
+	}]);
+
+	return ServiceTable;
 }(_react2.default.Component)) || _class);
-
-// this.state.scheduleInfo
-
 exports.default = ServiceTable;
 
 /***/ })
