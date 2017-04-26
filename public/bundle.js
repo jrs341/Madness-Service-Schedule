@@ -42273,11 +42273,12 @@ var ServiceStatusDialog = (_dec = (0, _reactRedux.connect)(function (store) {
     key: 'render',
     value: function render() {
       var actions = [_react2.default.createElement(_RaisedButton2.default, {
-        label: 'Cancel',
+        label: 'OK',
         primary: true,
         style: { color: 'red' },
         onTouchTap: this.handleClose
       }), _react2.default.createElement(_RaisedButton2.default, {
+        style: { display: 'none' },
         label: this.props.status ? 'Not Completed' : 'Completed',
         primary: true,
         onTouchTap: this.serviceStatus
@@ -42927,7 +42928,7 @@ var TimeDropDown = (_dec = (0, _reactRedux.connect)(function (store) {
 
       return _react2.default.createElement(
         _DropDownMenu2.default,
-        { style: { display: 'inline-block', width: '50%' }, value: this.state.value, onChange: this.serviceTimeState },
+        { style: { display: 'inline-block', width: '50%' }, value: this.props.serviceTime, onChange: this.serviceTimeState },
         this.state.times.map(function (times, i) {
           return _this3.menuItem(times, i);
         })

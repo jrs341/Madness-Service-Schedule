@@ -74,12 +74,13 @@ constructor(props) {
   render() {
     const actions = [
       <RaisedButton
-        label="Cancel"
+        label="OK"
         primary={true}
         style={{color: 'red'}}
         onTouchTap={this.handleClose}
       />,
       <RaisedButton
+        style={{display: 'none'}}
         label={this.props.status ? 'Not Completed' : 'Completed'}
         primary={true}
         onTouchTap={this.serviceStatus}

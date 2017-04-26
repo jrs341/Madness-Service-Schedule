@@ -193,7 +193,7 @@ export default class TimeDropDown extends React.Component {
 
   render() {
     return (
-      <DropDownMenu style={{display: 'inline-block', width: '50%'}} value={this.state.value} onChange={this.serviceTimeState}>
+      <DropDownMenu style={{display: 'inline-block', width: '50%'}} value={this.props.serviceTime} onChange={this.serviceTimeState}>
         {/*{menuItems}*/}
         {this.state.times.map((times, i) => this.menuItem(times, i))}
       </DropDownMenu>
