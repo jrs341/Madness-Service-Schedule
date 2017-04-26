@@ -1,8 +1,23 @@
 import React from 'react';
+import { connect } from "react-redux"
 import axios from 'axios';
+import {List, ListItem} from 'material-ui/List'
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import Checkbox from 'material-ui/Checkbox';
+import FlatButton from 'material-ui/FlatButton';
+import ContactEmail from 'material-ui/svg-icons/communication/email'
+import ContactPhone from 'material-ui/svg-icons/communication/phone'
+// import ServiceCard from '../Components/ServiceCard';
+
+@connect((store) => {
+  return {
+    location: store.locationState.location,
+    serviceDate: store.serviceDateState.serviceDate,
+    serviceTime: store.serviceTimeState.serviceTime,
+    scheduledBy: store.scheduledByState.scheduledBy
+  };
+})
 
 export default class ServiceStatusDialog extends React.Component {
 
@@ -73,19 +88,24 @@ constructor(props) {
 
     return (
       <div>
-        <Checkbox 
-          label={this.props.status ? 'Mark as not complete' : 'Mark as completed by'} 
+        <FlatButton
+          // label={this.props.status ? 'Mark as not complete' : 'Mark as completed by'} 
+          label={this.props.name}
           onTouchTap={this.handleOpen} 
-          checked={this.props.status}
-          iconStyle={this.props.status ? {fill: 'red'} : {fill: 'green'}}
+          // checked={this.props.status}
+          // iconStyle={this.props.status ? {fill: 'red'} : {fill: 'green'}}
         />
+        
         <Dialog
           actions={actions}
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
         >
-         {this.props.status ? 'Mark as not complete' : 'Mark as completed'}
+        <List>
+            <ListItem primaryText={this.props.email} leftIcon={<ContactEmail color={'blue'} />} />
+            <ListItem primaryText={this.props.phone} leftIcon={<ContactPhone color={'green'} />} />
+        </List>
         </Dialog>
       </div>
     );

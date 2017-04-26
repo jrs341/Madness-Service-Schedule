@@ -26,7 +26,7 @@ export default class LocationDropDown extends React.Component {
 
   render() {
     return (
-      <DropDownMenu value={this.state.value} openImmediately = {false} onChange={this.locationState}>
+      <DropDownMenu style={{display: 'inline-block', width: '50%'}} value={this.state.value} openImmediately = {false} onChange={this.locationState}>
         <MenuItem value='Austin' label="Austin, TX" primaryText="Austin, TX" />
         <MenuItem value='Signal Hill' label="Signal Hill ,CA" primaryText="Signal Hill, CA" />
       </DropDownMenu>

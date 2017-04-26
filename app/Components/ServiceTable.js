@@ -4,10 +4,12 @@ import { Link } from 'react-router'
 import { Card, CardTitle, CardHeader, CardText, CardActions } from 'material-ui/Card'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import {List, ListItem} from 'material-ui/List'
+import { changeServiceTimeState } from '../actions/serviceTimeActions'
 import axios from 'axios'
 import LocationDropDown from '../Components/LocationDropDown'
 import DatePicker from '../Components/DatePicker'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton';
 import ActionBuild from 'material-ui/svg-icons/action/build'
 import ContactEmail from 'material-ui/svg-icons/communication/email'
 import ContactPhone from 'material-ui/svg-icons/communication/phone'
@@ -15,11 +17,18 @@ import Vehicle from 'material-ui/svg-icons/maps/directions-car'
 import Employee from 'material-ui/svg-icons/action/account-box'
 import Divider from 'material-ui/Divider'
 import Checkbox from 'material-ui/Checkbox'
+import ServiceStatusDialog from '../Components/ServiceStatusDialog'
 
 var date = new Date();
 var dateString = date.toString().split(' ', 4).join(' ');
 var serviceStatus = 'red';
 // const times =['9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '1:00', '1:30', '2:00', '2:30', '3:00', '3:30', '4:00', '4:30'];
+const tableRow = {
+	height: 40,
+	color: 'green',
+	paddingTop: 0,
+	paddingBottom: 0
+};
 
 @connect((store) => {
 	return {
@@ -60,6 +69,8 @@ constructor(props) {
 	this.tableRow = this.tableRow.bind(this);
 	this.updateScheduleInfo = this.updateScheduleInfo.bind(this);
 	this.serviceStatus = this.serviceStatus.bind(this);
+	this.selectTime = this.selectTime.bind(this);
+	// this.serviceTimeState = this.serviceTimeState.bind(this);
 }
 
 // componentWillMount() {
@@ -72,7 +83,7 @@ componentDidMount() {
 
 // without the if else statement an infinate loop is created
 componentWillUpdate(nextProps, nextState){
-	console.log('will update');
+	// console.log('will update');
 	// console.log(nextState);
 	if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location){
 		this.setState({cardDisplay: 'none'});
@@ -84,27 +95,37 @@ componentWillUpdate(nextProps, nextState){
 }
 
 componentDidUpdate(prevProps, prevState) {
-	console.log('did update');
+	// console.log('did update');
 	// console.log(prevState);
 	
+}
+
+selectTime(row, column, event){
+	if(column == 1){
+	console.log(this.state.times[row].time);
+	this.props.dispatch(changeServiceTimeState(this.state.times[row].time));
+	} else {
+		return
+	}
 }
 
 tableRow(times, i) {
 	// console.log(this.state.times[0].time);
 	if (this.state.times[i].booked){
-		console.log('booked');
+		// console.log('booked');
 		return (
-			<TableRow>
-	       	 <TableRowColumn >{this.state.times[i].time}</TableRowColumn>
-	         <TableRowColumn>{this.state.times[i].given_name + ' ' + this.state.times[i].family_name}</TableRowColumn>
-	         <TableRowColumn>{this.state.times[i].vehicle_model}</TableRowColumn>
-	         <TableRowColumn>{this.state.times[i].requested_service}</TableRowColumn>
-	    </TableRow>
+			<TableRow striped={this.state.times[i].booked}>
+		 {/*<TableRowColumn>{<FlatButton onTouchTap={this.selectTime} name={this.state.times[i].time}/>}</TableRowColumn>*/}
+		       	 <TableRowColumn name={this.state.times[i].time}>{this.state.times[i].time}</TableRowColumn>
+		         <TableRowColumn>{<ServiceStatusDialog name={this.state.times[i].given_name + ' ' + this.state.times[i].family_name} email={this.state.times[i].email} phone={this.state.times[i].phone_number}/>}</TableRowColumn>
+		         <TableRowColumn>{<ServiceStatusDialog name={this.state.times[i].vehicle_model}/>}</TableRowColumn>
+		         <TableRowColumn>{<ServiceStatusDialog name={this.state.times[i].service_request}/>}</TableRowColumn>
+	    	</TableRow>
 		);
 		} else {
 		return (
 			<TableRow>
-				<TableRowColumn>{this.state.times[i].time}</TableRowColumn>
+				<TableRowColumn name={this.state.times[i].time}>{this.state.times[i].time}</TableRowColumn>
 				<TableRowColumn>{' '}</TableRowColumn>
 		        <TableRowColumn>{' '}</TableRowColumn>
 		        <TableRowColumn>{' '}</TableRowColumn>
@@ -131,7 +152,7 @@ serviceStatus(event, isInputChecked) {
 
 
 updateScheduleInfo() {
-	console.log('updateScheduleInfo');
+	// console.log('updateScheduleInfo');
     // this.setState({scheduleInfo: getRequestResponse});
     for (var i=0; i<this.state.times.length; i++){
     	for(var j=0; j<this.state.scheduleInfo.length; j++){
@@ -168,7 +189,7 @@ scheduleForToday = () => {
 }
 
 getSchedule = (date, location) => {
-console.log(date);
+// console.log(date);
 	axios({
       type: 'GET',
       url: '/getSchedule/' + date + '/' + location
@@ -194,9 +215,9 @@ console.log(date);
 
   render() {
     return (
-    	<Table>
+    	<Table onCellClick={this.selectTime}>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                 <TableRow>
+                 <TableRow >
                    <TableHeaderColumn>Time</TableHeaderColumn>
                    <TableHeaderColumn>Name</TableHeaderColumn>
                    {/*<TableHeaderColumn>Last Name</TableHeaderColumn>

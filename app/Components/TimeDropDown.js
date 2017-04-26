@@ -5,9 +5,9 @@ import { changeServiceTimeState } from '../actions/serviceTimeActions'
 import DropDownMenu from 'material-ui/DropDownMenu'
 import MenuItem from 'material-ui/MenuItem'
 
-var menuItems = [];
-var reservedTimes = [];
-var timeArray = [{time:'9:00', booked: false},{time:'9:30', booked: false}, {time:'10:00'}, {time:'10:30'}, {time:'11:00'}, {time:'11:30'}, {time:'12:00'}, {time:'12:30'}, {time:'1:00'}, {time:'1:30'}, {time:'2:00'}, {time:'2:30'}, {time:'3:00'}, {time:'3:30'}, {time:'4:00'}, {time:'4:30'}]
+// var menuItems = [];
+// var reservedTimes = [];
+// var timeArray = [{time:'9:00', booked: false},{time:'9:30', booked: false}, {time:'10:00'}, {time:'10:30'}, {time:'11:00'}, {time:'11:30'}, {time:'12:00'}, {time:'12:30'}, {time:'1:00'}, {time:'1:30'}, {time:'2:00'}, {time:'2:30'}, {time:'3:00'}, {time:'3:30'}, {time:'4:00'}, {time:'4:30'}]
 // const timeArray = ['9:00','9:30','10:00','10:30','11:00','11:30','12:00','12:30','1:00','1:30','2:00','2:30','3:00','3:30','4:00','4:30']
 
 @connect((store) => {
@@ -26,7 +26,7 @@ export default class TimeDropDown extends React.Component {
     this.state = {
       value: '9:00',
       reservedTimes: [],
-      timeArray: [{time:'9:00', booked: true},{time:'9:30', booked: false}, {time:'10:00'}, {time:'10:30'}, {time:'11:00'}, {time:'11:30'}, {time:'12:00'}, {time:'12:30'}, {time:'1:00'}, {time:'1:30'}, {time:'2:00'}, {time:'2:30'}, {time:'3:00'}, {time:'3:30'}, {time:'4:00'}, {time:'4:30'}]
+      times: [{time:'9:00'},{time:'9:30'}, {time:'10:00'}, {time:'10:30'}, {time:'11:00'}, {time:'11:30'}, {time:'12:00'}, {time:'12:30'}, {time:'1:00'}, {time:'1:30'}, {time:'2:00'}, {time:'2:30'}, {time:'3:00'}, {time:'3:30'}, {time:'4:00'}, {time:'4:30'}]
     };
 
     this.getAvailableTimes = this.getAvailableTimes.bind(this);
@@ -36,7 +36,8 @@ export default class TimeDropDown extends React.Component {
   }
 
   componentWillMount() {
-    console.log('will mount');
+    // console.log('will mount');
+    this.props.dispatch(changeServiceTimeState(this.state.value));
     // this.getAvailableTimes(this.props.serviceDate, this.props.location);
     // this.updateBookedStatus();
   }
@@ -52,27 +53,45 @@ export default class TimeDropDown extends React.Component {
     console.log('will update');
     if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location){
       this.getAvailableTimes(nextProps.serviceDate, nextProps.location);
+      
     }
     else {
       
     }
   }
 
+  // componentDidUpdate(prevProps, prevState) {
+  //   this.setState({value: this.props.serviceTime});
+  // }
+
+  // updateBookedStatus() {
+  //   console.log('update booked status');
+  //   for (var i=0; i<timeArray.length; i++){
+  //     console.log(reservedTimes);
+  //     for (var j=0; j<reservedTimes.length; j++){
+  //       if (timeArray[i].time == reservedTimes[j].time){
+  //         console.log('equal');
+  //         timeArray[i].booked = true;
+  //         console.log(timeArray);
+  //       }
+  //     }
+  //     console.log(i);
+  //   }
+  //   // this.props.dispatch(changeServiceTimeState(value));
+  //   // this.setState({value: value});
+  // }
+
   updateBookedStatus() {
-    console.log('update booked status');
-    for (var i=0; i<timeArray.length; i++){
-      console.log(reservedTimes);
-      for (var j=0; j<reservedTimes.length; j++){
-        if (timeArray[i].time == reservedTimes[j].time){
-          console.log('equal');
-          timeArray[i].booked = true;
-          console.log(timeArray);
+    console.log('updateBookedStatus');
+    // this.setState({scheduleInfo: getRequestResponse});
+    for (var i=0; i<this.state.times.length; i++){
+      for(var j=0; j<this.state.reservedTimes.length; j++){
+        if (this.state.times[i].time == this.state.reservedTimes[j].time){
+          this.state.times.splice(i, 1, this.state.reservedTimes[j]);
+          console.log(this.state.times);
         }
       }
-      console.log(i);
     }
-    // this.props.dispatch(changeServiceTimeState(value));
-    // this.setState({value: value});
   }
 
   serviceTimeState(event, index, value) {
@@ -89,32 +108,31 @@ export default class TimeDropDown extends React.Component {
 
     axios({
         type: 'GET',
-        url: '/availableTimes/' + date + '/' + location
+        url: '/getSchedule/' + date + '/' + location
       }).then((response)=> {
         console.log(response.data);
         if(response.data == '') {
           console.log('nothing scheduled for today');
-          // this.setState({reservedTimes: []});
-          reservedTimes = [];
+          this.setState({reservedTimes: []});
+          this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
           // this.menuItem;
-          // this.updateBookedStatus();
+          
         }
         else {
+          this.setState({reservedTimes: response.data});
+          this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
           console.log('today s schedule');
-          // this.setState({reservedTimes: response.data});
-          // this.updateBookedStatus();
-          // console.log(this.state.reservedTimes);
-          reservedTimes = response.data;
-          // this.menuItem;
-          // this.updateBookedStatus();
+          this.updateBookedStatus();
+          console.log('reserved times' + this.state.reservedTimes);
+         
         }
     });
   }
 
-  menuItem(fieldInfo, index) {
+  menuItem(times, i) {
     console.log('menu item');
       return (
-        <MenuItem disabled={timeArray[index].booked} key={index} value={timeArray[index].time} label={timeArray[index].time} primaryText={timeArray[index].time} />
+        <MenuItem disabled={this.state.times[i].booked} key={i} value={this.state.times[i].time} label={this.state.times[i].time} primaryText={this.state.times[i].time} />
       );
     }
 
@@ -175,9 +193,9 @@ export default class TimeDropDown extends React.Component {
 
   render() {
     return (
-      <DropDownMenu value={this.state.value} onChange={this.serviceTimeState}>
+      <DropDownMenu style={{display: 'inline-block', width: '50%'}} value={this.state.value} onChange={this.serviceTimeState}>
         {/*{menuItems}*/}
-        {timeArray.map((fieldInfo, index) => this.menuItem(fieldInfo, index))}
+        {this.state.times.map((times, i) => this.menuItem(times, i))}
       </DropDownMenu>
     );
   }

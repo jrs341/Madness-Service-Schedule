@@ -135,7 +135,7 @@ export default class ServiceForm extends React.Component {
     return (
     	<div>
 	    	<Row>
-	    		<h1> Madness Autoworks Service Schedule for <LocationDropDown /></h1>
+	    		
 	    	</Row>
 	    	<Row>
 	    	<Col md={4}>
@@ -150,6 +150,13 @@ export default class ServiceForm extends React.Component {
 	        	/>
 	    	{/*</Col>
 	    	<Col md={4} >*/}
+	    		
+		    	<TimeDropDown
+		    	/>
+		    	<LocationDropDown
+
+		    	/>
+	    		
 	            <TextField
 					style={{display: 'inline-block', width: '50%'}}
 	                id='given_name'
@@ -191,8 +198,8 @@ export default class ServiceForm extends React.Component {
 	                id='vehicle_year'
 	                vehicle={this.state.vehicle_year}
 	                type='text'
-	                hintText='Vehicle Year'
-	                floatingLabelText='Vehicle Year'
+	                hintText='Year'
+	                floatingLabelText='Year'
 	               	onChange={this.updateFormInfo}
 	            />
 	            <TextField
@@ -200,8 +207,8 @@ export default class ServiceForm extends React.Component {
 	                id='vehicle_make'
 	                value={this.state.vehicle_make}
 	                type='text'
-	                hintText='Vehicle Make'
-	                floatingLabelText='Vehicle Make'
+	                hintText='Make'
+	                floatingLabelText='Make'
 	               	onChange={this.updateFormInfo}
 	            />
 	            <TextField
@@ -209,8 +216,8 @@ export default class ServiceForm extends React.Component {
 	                id='vehicle_model'
 	                value={this.state.vehicle_model}
 	                type='text'
-	                hintText='Vehicle Model'
-	                floatingLabelText='Vehicle Model'
+	                hintText='Model'
+	                floatingLabelText='Model'
 	               	onChange={this.updateFormInfo}
 	            />
 	            
@@ -239,6 +246,7 @@ export default class ServiceForm extends React.Component {
 	            </Link>*/}
 			</Col>
 	    	<Col md={8}>
+	    		<h1> Madness Autoworks Service Schedule for {this.props.location}</h1>
 	            <ServiceTable />
     		</Col>
     		</Row>

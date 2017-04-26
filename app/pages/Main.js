@@ -13,11 +13,11 @@ injectTapEventPlugin();
 // import NavBar from '../Components/Navbar/NavBar'
 // import Footer from '../Components/Footer/Footer'
 // adjust this style if the size of the nav or footer changes
-const style = {
-  marginTop: 70,
-  marginBottom: 80,
-  width: '100%'
-};
+// const style = {
+//   marginTop: 70,
+//   marginBottom: 80,
+//   width: '100%'
+// };
 
 const muiTheme = getMuiTheme({
   calendar: {
@@ -34,7 +34,7 @@ export default class Main extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          <div style={style}>
+          <div>
             {this.props.children}
           </div>
         </div>
