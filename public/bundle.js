@@ -79657,7 +79657,7 @@ var ServiceTable = (_dec = (0, _reactRedux.connect)(function (store) {
 		};
 
 		_this.getSchedule = function (date, location) {
-
+			console.log(date);
 			(0, _axios2.default)({
 				type: 'GET',
 				url: '/getSchedule/' + date + '/' + location

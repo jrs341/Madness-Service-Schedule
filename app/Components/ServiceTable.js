@@ -168,7 +168,7 @@ scheduleForToday = () => {
 }
 
 getSchedule = (date, location) => {
-
+console.log(date);
 	axios({
       type: 'GET',
       url: '/getSchedule/' + date + '/' + location
