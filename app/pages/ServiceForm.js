@@ -246,7 +246,7 @@ export default class ServiceForm extends React.Component {
 	            </Link>*/}
 			</Col>
 	    	<Col md={8}>
-	    		<h1> Madness Autoworks Service Schedule for {this.props.location}</h1>
+	    		<h2> Madness Autoworks Service Schedule for {this.props.location}</h2>
 	            <ServiceTable />
     		</Col>
     		</Row>
