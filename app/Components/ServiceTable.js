@@ -98,11 +98,12 @@ componentDidUpdate(prevProps, prevState) {
 }
 
 selectTime(row, column, event){
-	console.log('column '+column);
-	if(column == 1 && !this.state.times[row].booked){
-	console.log(this.state.times[row].time);
+	// console.log('1 column '+column);
+	// console.log('2 ' + this.state.times[row].booked);
+	if(!this.state.times[row].booked){
+	// console.log('2 ' + this.state.times[row].booked);
 	this.props.dispatch(changeServiceTimeState(this.state.times[row].time));
-	} else if (column == 2 || column == 3 || column == 4 && !this.state.time[row].booked){
+	} else if (column == 2 || column == 3 || column == 4 && this.state.time[row].booked != 'undefined'){
 		this.setState({
 			customerInfoDialog: true,
 			given_name: this.state.times[row].given_name,
@@ -115,7 +116,7 @@ selectTime(row, column, event){
 			service_request: this.state.times[row].service_request,
 			scheduled_by: this.state.times[row].scheduled_by
 		});
-		console.log('customer info state ' + this.state.times[row].requested_service);
+		// console.log('customer info state ' + this.state.times[row].booked);
 	}
 	else {
 		return
