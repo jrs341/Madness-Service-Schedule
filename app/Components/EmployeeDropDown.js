@@ -32,7 +32,14 @@ export default class EmployeeDropDown extends React.Component {
 
   render() {
     return (
-      <DropDownMenu value={this.state.value} onChange={this.scheduledByState}>
+      <DropDownMenu 
+        iconStyle={{backgroundColor: 'red', fill: 'green', height: 10, padding: 'none'}}
+        labelStyle={{color: 'black', backgroundColor: 'yellow', height: '100%', lineHeight: 2}}
+        underlineStyle={{display: 'none'}} 
+        menuItemStyle={{color: 'green'}} 
+        style={{display: 'inline-block', width: '30%', height: 30}}
+        value={this.state.value} 
+        onChange={this.scheduledByState}>
         <MenuItem value={1} label="Employee 1" primaryText="Employee 1" />
         <MenuItem value={2} label="Employee 2" primaryText="Employee 2" />
         <MenuItem value={3} label="Employee 3" primaryText="Employee 3" />

@@ -14,7 +14,8 @@ import MenuItem from 'material-ui/MenuItem'
   return {
     location: store.locationState.location,
     serviceDate: store.serviceDateState.serviceDate,
-    serviceTime: store.serviceTimeState.serviceTime
+    serviceTime: store.serviceTimeState.serviceTime,
+    form_dialog_state: store.formDialogState.form_dialog_state
   }
 })
 
@@ -36,21 +37,23 @@ export default class TimeDropDown extends React.Component {
   }
 
   componentWillMount() {
+    console.log('TimeDropDown will mount');
     // console.log('will mount');
-    this.props.dispatch(changeServiceTimeState(this.state.value));
-    // this.getAvailableTimes(this.props.serviceDate, this.props.location);
+    // *******need this if both components are on the same page**********
+    // this.props.dispatch(changeServiceTimeState(this.state.value));
+    this.getAvailableTimes(this.props.serviceDate, this.props.location);
     // this.updateBookedStatus();
   }
 
   componentDidMount() {
-    console.log('did mount');
-    this.getAvailableTimes(this.props.serviceDate, this.props.location);
-    // setTimeout(this.updateBookedStatus(),1000);
+    console.log('TimeDropDown did mount');
+    // this.getAvailableTimes(this.props.serviceDate, this.props.location);
+    this.updateBookedStatus();
   }
 
   componentWillUpdate(nextProps, nextState){
     // this.updateBookedStatus();
-    console.log('will update');
+    console.log('TimeDropDown will update');
     if (this.props.serviceDate != nextProps.serviceDate || this.props.location != nextProps.location){
       this.getAvailableTimes(nextProps.serviceDate, nextProps.location);
       
@@ -82,7 +85,7 @@ export default class TimeDropDown extends React.Component {
   // }
 
   updateBookedStatus() {
-    console.log('updateBookedStatus');
+    console.log('TimeDropDwon updateBookedStatus');
     // this.setState({scheduleInfo: getRequestResponse});
     for (var i=0; i<this.state.times.length; i++){
       for(var j=0; j<this.state.reservedTimes.length; j++){
@@ -110,9 +113,9 @@ export default class TimeDropDown extends React.Component {
         type: 'GET',
         url: '/getSchedule/' + date + '/' + location
       }).then((response)=> {
-        console.log(response.data);
+        // console.log(response.data);
         if(response.data == '') {
-          console.log('nothing scheduled for today');
+          // console.log('nothing scheduled for today');
           this.setState({reservedTimes: []});
           this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
           // this.menuItem;
@@ -121,18 +124,24 @@ export default class TimeDropDown extends React.Component {
         else {
           this.setState({reservedTimes: response.data});
           this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
-          console.log('today s schedule');
+          // console.log('today s schedule');
           this.updateBookedStatus();
-          console.log('reserved times' + this.state.reservedTimes);
+          // console.log('reserved times' + this.state.reservedTimes);
          
         }
     });
   }
-
+// style={} innerDivStyle={} 
+// style={{color: 'yellow'}} innerDivStyle={{color: 'green'}}
   menuItem(times, i) {
-    console.log('menu item');
+    console.log('TimeDropDown menu item' + this.state.times[i].booked);
       return (
-        <MenuItem disabled={this.state.times[i].booked} key={i} value={this.state.times[i].time} label={this.state.times[i].time} primaryText={this.state.times[i].time} />
+        <MenuItem 
+        disabled={this.state.times[i].booked} 
+        key={i} 
+        value={this.state.times[i].time} 
+        label={this.state.times[i].time} 
+        primaryText={this.state.times[i].time} />
       );
     }
 
@@ -193,7 +202,15 @@ export default class TimeDropDown extends React.Component {
 
   render() {
     return (
-      <DropDownMenu style={{display: 'inline-block', width: '50%'}} value={this.props.serviceTime} onChange={this.serviceTimeState}>
+      <DropDownMenu 
+      iconStyle={{backgroundColor: 'red', fill: 'green', height: 10, padding: 'none'}}
+      labelStyle={{color: 'black', backgroundColor: 'yellow', height: '100%', lineHeight: 2}}
+      underlineStyle={{display: 'none'}} 
+      menuItemStyle={{color: 'green'}} 
+      style={{display: 'inline-block', width: '30%', height: 30, marginLeft: '5%', 
+                  marginRight: '5%',}} 
+      value={this.props.serviceTime} 
+      onChange={this.serviceTimeState}>
         {/*{menuItems}*/}
         {this.state.times.map((times, i) => this.menuItem(times, i))}
       </DropDownMenu>

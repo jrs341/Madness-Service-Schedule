@@ -63,7 +63,7 @@ var CustomersSchema = new Schema({
   },
 
   vehicle_year: {
-    type: Number,
+    type: String,
     trim: true
   }
 });

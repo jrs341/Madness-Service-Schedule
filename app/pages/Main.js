@@ -21,12 +21,19 @@ injectTapEventPlugin();
 
 const muiTheme = getMuiTheme({
   calendar: {
-    width: 250
+    // width: 250,
+    // backgroundColor: 'red'
   },
   datePicker: {
-    selectColor: cyan500,
+    // selectColor: 'red',
+    selectColor: cyan500
+    // backgroundColor: 'red'
   }
 });
+
+const style = {
+  // backgroundColor: 'black'
+}
 
 export default class Main extends React.Component {
 
@@ -34,7 +41,7 @@ export default class Main extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div>
-          <div>
+          <div style={style}>
             {this.props.children}
           </div>
         </div>

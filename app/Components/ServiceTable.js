@@ -5,6 +5,7 @@ import { Card, CardTitle, CardHeader, CardText, CardActions } from 'material-ui/
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import {List, ListItem} from 'material-ui/List'
 import { changeServiceTimeState } from '../actions/serviceTimeActions'
+import { changeFormDialogState } from '../actions/formDialogActions'
 import axios from 'axios'
 import LocationDropDown from '../Components/LocationDropDown'
 import DatePicker from '../Components/DatePicker'
@@ -37,7 +38,9 @@ const tableRow = {
 		location: store.locationState.location,
 		serviceDate: store.serviceDateState.serviceDate,
 		serviceTime: store.serviceTimeState.serviceTime,
-		scheduledBy: store.scheduledByState.scheduledBy
+		scheduledBy: store.scheduledByState.scheduledBy,
+		form_dialog_state: store.formDialogState.form_dialog_state
+
 	};
 })
 
@@ -103,6 +106,7 @@ selectTime(row, column, event){
 	if(!this.state.times[row].booked){
 	// console.log('2 ' + this.state.times[row].booked);
 	this.props.dispatch(changeServiceTimeState(this.state.times[row].time));
+	this.props.dispatch(changeFormDialogState(row));
 	} else if (column == 2 || column == 3 || column == 4 && this.state.time[row].booked != 'undefined'){
 		this.setState({
 			customerInfoDialog: true,
@@ -131,10 +135,13 @@ tableRow(times, i) {
 
 	if (this.state.times[i].booked){
 		return (
-			<TableRow style={{height: 30}} selectable={true} striped={this.state.times[i].booked}>
+			<TableRow 
+			style={{height: 33}} 
+			selectable={true} 
+			striped={this.state.times[i].booked}>
 		 {/*<TableRowColumn>{<FlatButton onTouchTap={this.selectTime} name={this.state.times[i].time}/>}</TableRowColumn>*/}
 		       	 <TableRowColumn 
-		       	 style={{height: 30, 
+		       	 style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
@@ -144,7 +151,7 @@ tableRow(times, i) {
 		       	 name={this.state.times[i].time}>
 		       	 {this.state.times[i].time}
 		       	 </TableRowColumn>
-		         <TableRowColumn style={{height: 30, 
+		         <TableRowColumn style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
@@ -158,15 +165,20 @@ tableRow(times, i) {
 		         	modal={false}>
 		         	<List>
 		         		<ListItem primaryText={this.state.given_name + ' ' + this.state.family_name}/>
-			            <ListItem primaryText={this.state.email} leftIcon={<ContactEmail color={'blue'} />} />
-			            <ListItem primaryText={this.state.phone_number} leftIcon={<ContactPhone color={'green'} />} />
-			            <ListItem primaryText={this.state.vehicle_year + ' ' + this.state.vehicle_make + ' ' + this.state.vehicle_model} leftIcon={<Vehicle color={'red'}/>}/>
-			            <ListItem primaryText={'Scheduled by ' + this.state.scheduled_by} leftIcon={<Employee color={'yellow'}/>} />
-			            <ListItem primaryText={'Service Request: ' + this.state.service_request} leftIcon={<ActionBuild color={'red'}/>}/>
+			            <ListItem primaryText={this.state.email} 
+			            		  leftIcon={<ContactEmail color={'blue'} />} />
+			            <ListItem primaryText={this.state.phone_number} 
+			            		  leftIcon={<ContactPhone color={'green'} />} />
+			            <ListItem primaryText={this.state.vehicle_year + ' ' + this.state.vehicle_make + ' ' + this.state.vehicle_model} 
+			            		  leftIcon={<Vehicle color={'red'}/>}/>
+			            <ListItem primaryText={'Scheduled by ' + this.state.scheduled_by} 
+			            		  leftIcon={<Employee color={'yellow'}/>} />
+			            <ListItem primaryText={'Service Request: ' + this.state.service_request} 
+			            		  leftIcon={<ActionBuild color={'red'}/>}/>
         			</List>
 		         	</Dialog>}
 		         </TableRowColumn>
-		         <TableRowColumn style={{height: 30, 
+		         <TableRowColumn style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
@@ -177,7 +189,7 @@ tableRow(times, i) {
 		         	name={this.state.times[i].vehicle_model}
 		         	/>}
 		         </TableRowColumn>
-		         <TableRowColumn style={{height: 30, 
+		         <TableRowColumn style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
@@ -188,29 +200,29 @@ tableRow(times, i) {
 		);
 		} else {
 		return (
-			<TableRow style={{height: 30}}>
-				<TableRowColumn style={{height: 30, 
+			<TableRow style={{height: 33}}>
+				<TableRowColumn style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
 		       	 		paddingLeft: 'auto'
 		       	 		
 		       	 	}} name={this.state.times[i].time}>{this.state.times[i].time}</TableRowColumn>
-				<TableRowColumn style={{height: 30, 
+				<TableRowColumn style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
 		       	 		paddingLeft: 'auto'
 		       	 		
 		       	 	}} >{' '}</TableRowColumn>
-		        <TableRowColumn style={{height: 30, 
+		        <TableRowColumn style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
 		       	 		paddingLeft: 'auto'
 		       	 		
 		       	 	}} >{' '}</TableRowColumn>
-		        <TableRowColumn style={{height: 30, 
+		        <TableRowColumn style={{height: 33, 
 		       	 		paddingTop: 0, 
 		       	 		paddingRight:'auto',
 		       	 		paddingBottom: 0,
@@ -224,7 +236,7 @@ tableRow(times, i) {
  	
 
 serviceStatus(event, isInputChecked) {
-	console.log('serviceStatus');
+	// console.log('serviceStatus');
 	alert('are you sure');
 	axios.post('/serviceStatus',
 		{ 
@@ -256,7 +268,7 @@ scheduleForToday = () => {
     	if(response.data == '') {
     		this.setState({scheduleInfo: []});
     		this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
-    		console.log('nothing scheduled for today');
+    		// console.log('nothing scheduled for today');
     		this.setState({scheduleStatus: 'There are no reservations for today at this location'});	
     	}
     	else {
@@ -265,7 +277,7 @@ scheduleForToday = () => {
     		this.updateScheduleInfo();
     		this.setState({cardDisplay: 'block'});
     		this.setState({scheduleStatus: ''});
-    		console.log('today s schedule from scheduleForToday');
+    		// console.log('today s schedule from scheduleForToday');
     		
     	}
     });
@@ -280,7 +292,7 @@ getSchedule = (date, location) => {
     	if(response.data == '') {
     		this.setState({scheduleInfo: []});
     		this.setState({times: [{time: '9:00'}, {time: '9:30'}, {time: '10:00'}, {time: '10:30'}, {time: '11:00'}, {time: '11:30'}, {time: '12:00'}, {time: '12:30'}, {time: '1:00'}, {time: '1:30'}, {time: '2:00'}, {time: '2:30'}, {time: '3:00'}, {time: '3:30'}, {time: '4:00'}, {time: '4:30'}] });
-    		console.log('nothing scheduled for today');
+    		// console.log('nothing scheduled for today');
     		this.setState({scheduleStatus: 'There are no reservations for today at this location'});	
     	}
     	else {
@@ -289,7 +301,7 @@ getSchedule = (date, location) => {
     		this.updateScheduleInfo();
     		this.setState({cardDisplay: 'block'});
     		this.setState({scheduleStatus: ''});
-    		console.log('today s schedule getSchedule');
+    		// console.log('today s schedule getSchedule');
     	}
     });
 }
@@ -297,7 +309,9 @@ getSchedule = (date, location) => {
   render() {
     return (
     	<Table onCellClick={this.selectTime}>
-              <TableHeader style={{height: 30}} displaySelectAll={false} adjustForCheckbox={false}>
+              <TableHeader style={{height: 30}} 
+              	displaySelectAll={false} 
+              	adjustForCheckbox={false}>
                  <TableRow style={{height: 30}} >
                    <TableHeaderColumn style={{height: 30, 
 		       	 		paddingTop: 0, 

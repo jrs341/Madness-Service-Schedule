@@ -6,6 +6,7 @@ import { Container, Row, Col } from 'react-grid-system'
 import { Card, CardTitle, CardText, CardActions } from 'material-ui/Card'
 import axios from 'axios'
 import { changeServiceDateState } from '../actions/datePickerActions'
+import { changeFormDialogState } from '../actions/formDialogActions'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import DatePicker from '../Components/DatePicker'
@@ -16,6 +17,9 @@ import Calendar from 'material-ui/DatePicker/Calendar'
 import DatePickerDialog from 'material-ui/DatePicker/DatePickerDialog'
 // import ServiceCard from '../Components/ServiceCard'
 import ServiceTable from '../Components/ServiceTable'
+import YearDropDown from '../Components/YearDropDown'
+import Dialog from 'material-ui/Dialog'
+// import logo from '../../public/css/images/madnessLogo.png'
 
 var date = new Date();
 
@@ -24,7 +28,9 @@ var date = new Date();
 		location: store.locationState.location,
 		serviceDate: store.serviceDateState.serviceDate,
 		serviceTime: store.serviceTimeState.serviceTime,
-		scheduledBy: store.scheduledByState.scheduledBy
+		scheduledBy: store.scheduledByState.scheduledBy,
+		vehicle_year: store.vehicleYearState.vehicle_year,
+		form_dialog_state: store.formDialogState.form_dialog_state
 	};
 })
 
@@ -39,9 +45,10 @@ export default class ServiceForm extends React.Component {
 			email: '',
 			vehicle_make: '',
 			vehicle_model: '',
-			vehicle_year: '',
+			vehicle_year: 'none chosen',
 			service_request: '',
-			controlledDate: date 
+			controlledDate: date,
+			open: false
 		};
 
 		this.updateFormInfo = this.updateFormInfo.bind(this);
@@ -51,13 +58,25 @@ export default class ServiceForm extends React.Component {
 		this.submitFormInfo = this.submitFormInfo.bind(this);
 		this.disableWeekends = this.disableWeekends.bind(this);
 		this.serviceDateState = this.serviceDateState.bind(this);
+		this.handleOpen = this.handleOpen.bind(this);
+		this.handleClose = this.handleClose.bind(this);
 	}
 
+	componentDidMount() {
+		// console.log('1 did mount ' + this.state.vehicle_year);
+		// console.log('2 did mount ' + this.props.vehicle_year);
+		// console.log('props ' + this.props.serviceTime);
+	}
 	updateFormInfo = (event, newInput) => {
 		this.setState({[event.target.id]: newInput});
 	}
 
+	componentDidUpdate(prevProps, prevState) {
+		
+	}
+
 	addCustomerToDB = () => {
+		// console.log(this.props.vehicle_year);
 		axios.post('/addCustomerToDB',
 		{
 		  given_name: this.state.given_name,
@@ -66,7 +85,7 @@ export default class ServiceForm extends React.Component {
           email: this.state.email,
           vehicle_make: this.state.vehicle_make,
           vehicle_model: this.state.vehicle_model,
-          vehicle_year: this.state.vehicle_year,
+          vehicle_year: this.props.vehicle_year,
           service_request: this.state.service_request
 		}).then(function(response){
           console.log('added customer to DB');
@@ -74,11 +93,12 @@ export default class ServiceForm extends React.Component {
 	}
 
 	checkCustomerDB = () => {
+		this.setState({open: false});
 		axios({
           type: 'GET',
           url: '/checkCustomerDB/' + this.state.email
         }).then((response)=> {
-        	console.log(response.data);
+        	// console.log(response.data);
         	if(response.data == '') {
         		console.log('email not found adding to customer DB');
         		this.addCustomerToDB();
@@ -107,7 +127,7 @@ export default class ServiceForm extends React.Component {
           email: this.state.email,
           vehicle_make: this.state.vehicle_make,
           vehicle_model: this.state.vehicle_model,
-          vehicle_year: this.state.vehicle_year,
+          vehicle_year: this.props.vehicle_year,
           service_request: this.state.service_request
         }).then(function(response){
           console.log('added to service schedule');
@@ -124,11 +144,27 @@ export default class ServiceForm extends React.Component {
   	}
 
   	serviceDateState = (event, date) => {
-  		console.log(date);
+  		// console.log(date);
   		this.setState({controlledDate: date});
     	var date = date.toString().split(' ', 4).join(' ');
     	this.props.dispatch(changeServiceDateState(date));
     	// console.log(date);
+  	}
+
+  	// updateVehicleYear = (event, something) => {
+  	// 	// this.setState({vehicle_year: })
+  	// 	console.log(event);
+  	// 	console.log(something);
+  	// }
+
+  	handleOpen = () => {
+  		// this.setState({open: true});
+  		this.props.dispatch(changeFormDialogState(true));
+  	}
+
+  	handleClose = () => {
+  		// this.setState({open: false});
+  		this.props.dispatch(changeFormDialogState(false));
   	}
 
   render() {
@@ -143,81 +179,120 @@ export default class ServiceForm extends React.Component {
 	    			value={this.state.controlledDate}
 	    			disableYearSelection={true}
 		    		shouldDisableDate={this.disableWeekends}
-		    		hideCalendarDate= 'true'
+		    		hideCalendarDate= {true}
 		    		dialogContainerStyle={{width: 350}}
 		            firstDayOfWeek={1}	
 		            onTouchTapDay={this.serviceDateState}
 	        	/>
-	    	{/*</Col>
-	    	<Col md={4} >*/}
-	    		
+	    	<Dialog
+	    		open={this.props.form_dialog_state}
+	    		onRequestClose={this.handleClose}>
+		    	<EmployeeDropDown
+		    	/>
 		    	<TimeDropDown
 		    	/>
 		    	<LocationDropDown
-
 		    	/>
+
 	    		
 	            <TextField
-					style={{display: 'inline-block', width: '50%'}}
+					style={{display: 'inline-block',
+							 width: '45%', 
+							 float: 'left',
+							 height: 60
+							}}
+					floatingLabelFixed={true}
 	                id='given_name'
 	                value={this.state.given_name}
 	                type='text'
-	                hintText='First Name'
+	                // hintText='First Name'
+	                // hintStyle={{fontSize: 12}}
 	                floatingLabelText='First Name'
+	                // floatingLabelStyle={{fontSize: 12}}
 	                onChange={this.updateFormInfo}
 	            />
 	            <TextField
-	            	style={{display:'inline-block', width: '50%'}}
+	            	style={{display:'inline-block', 
+			            	width: '45%', 
+			            	float: 'right',
+			            	height: 60
+			            	}}
+	            	floatingLabelFixed={true}
 	                id='family_name'
 	                value={this.state.family_name}
 	                type='text'
-	                hintText='Last Name'
+	                // hintText='Last Name'
 	                floatingLabelText='Last Name'
 	               	onChange={this.updateFormInfo}
 	            />
 	            <TextField
-	            	style={{display: 'inline-block', width: '50%'}}
+	            	style={{display: 'inline-block', 
+		            	width: '45%', 
+		            	float: 'left',
+		            	height: 60
+		            	}}
+	            	floatingLabelFixed={true}
 	                id='email'
 	                value={this.state.email}
 	                type='text'
-	                hintText='Email'
+	                // hintText='Email'
 	                floatingLabelText='Email'
 	               	onChange={this.updateFormInfo}
 	            />
 	            <TextField
-	            	style={{display: 'inline-block', width: '50%'}}
+	            	style={{display: 'inline-block', 
+		            	width: '45%', 
+		            	float: 'right',
+		            	height: 60
+		            	}}
+	            	floatingLabelFixed={true}
 	                id='phone_number'
 	                value={this.state.phone_number}
 	                type='text'
-	                hintText='Phone Number'
+	                // hintText='Phone Number'
 	                floatingLabelText='Phone Number'
 	               	onChange={this.updateFormInfo}
 	            />
-	            <TextField
-	            	style={{display: 'inline-block', width: '33%'}}
+	            {/*<TextField
+	            	style={{display: 'inline-block', width: '30%', float: 'left'}}
 	                id='vehicle_year'
 	                vehicle={this.state.vehicle_year}
 	                type='text'
 	                hintText='Year'
 	                floatingLabelText='Year'
 	               	onChange={this.updateFormInfo}
+	            />*/}
+
+	            <YearDropDown
+	            	
 	            />
 	            <TextField
-	            	style={{display: 'inline-block', width: '33%'}}
+	            	style={{display: 'inline-block', 
+		            	width: '30%', 
+		            	marginLeft: '5%', 
+		            	marginRight: '3%',
+		            	height: 60
+		            	}}
 	                id='vehicle_make'
 	                value={this.state.vehicle_make}
 	                type='text'
-	                hintText='Make'
+	                // hintText='Make'
+	                floatingLabelFixed={true}
 	                floatingLabelText='Make'
 	               	onChange={this.updateFormInfo}
 	            />
 	            <TextField
-	            	style={{display: 'inline-block', width: '33%'}}
+	            	style={{display: 'inline-block', 
+		            	width: '30%', 
+		            	float: 'right',
+		            	height: 60
+		            	}}
 	                id='vehicle_model'
 	                value={this.state.vehicle_model}
 	                type='text'
-	                hintText='Model'
+	                // hintText='Model'
 	                floatingLabelText='Model'
+	                floatingLabelFixed={true}
 	               	onChange={this.updateFormInfo}
 	            />
 	            
@@ -233,20 +308,35 @@ export default class ServiceForm extends React.Component {
 	                rowsMax={5}
 	               	onChange={this.updateFormInfo}
 	            />
+	            
 	            <RaisedButton
 	                label="Submit"
 	                primary={true}
 	                onClick={this.checkCustomerDB}
 	            /> 
-	            {/*<Link to='serviceSchedule'>
-	              <RaisedButton
-	                label="Service Schedule"
+	            {/*<RaisedButton
+	            	style={{float: 'right'}}
+	                label="Cancel"
 	                primary={true}
-	              /> 
-	            </Link>*/}
+	                onClick={this.props.dispatch(changeFormDialogState(true))}
+	            />*/} 
+	        </Dialog>
+
+	        <RaisedButton
+	        		style={{
+	        			width: 310
+	        		}}
+	        		// backgroundColor={'red'}
+	                label="Schedule Service"
+	                primary={true}
+	                onClick={this.handleOpen}
+	            /> 
+
 			</Col>
 	    	<Col md={8}>
-	    		<h2> Madness Autoworks Service Schedule for {this.props.location}</h2>
+	    		{/*<img src={logo}/>*/}
+	    		<h2> Service Schedule for {<LocationDropDown
+		    	/>}</h2>
 	            <ServiceTable />
     		</Col>
     		</Row>
